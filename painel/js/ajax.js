@@ -35,6 +35,8 @@ $("#form").submit(function () {
     event.preventDefault();
     var formData = new FormData(this);
 
+    $('#mensagem').text('Salvando...')
+
     $.ajax({
         url: 'paginas/' + pag + "/salvar.php",
         type: 'POST',
@@ -46,7 +48,9 @@ $("#form").submit(function () {
             if (mensagem.trim() == "Salvo com Sucesso") {
 
                 $('#btn-fechar').click();
-                listar();          
+                listar();
+
+                $('#mensagem').text('')          
 
             } else {
 

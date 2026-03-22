@@ -8,10 +8,20 @@ $configuracoes = 'ocultar';
 
 //grupo pessoas
 $usuarios = 'ocultar';
+$fornecedores = 'ocultar';
+$funcionarios = 'ocultar';
 
 //grupo cadastros
 $grupo_acessos = 'ocultar';
 $acessos = 'ocultar';
+$frequencias = 'ocultar';
+$cargos = 'ocultar';
+$formas_pgto = 'ocultar';
+
+//grupo financeiro
+$receber = 'ocultar';
+$pagar = 'ocultar';
+
 
 
 $query = $pdo->query("SELECT * FROM usuarios_permissoes where usuario = '$id_usuario'");
@@ -41,6 +51,14 @@ if($total_reg > 0){
 			$usuarios = '';
 		}
 
+		if($chave == 'fornecedores'){
+			$fornecedores = '';
+		}
+
+		if($chave == 'funcionarios'){
+			$funcionarios = '';
+		}
+
 
 		if($chave == 'grupo_acessos'){
 			$grupo_acessos = '';
@@ -49,6 +67,30 @@ if($total_reg > 0){
 		if($chave == 'acessos'){
 			$acessos = '';
 		}
+
+		if($chave == 'frequencias'){
+			$frequencias = '';
+		}
+
+		if($chave == 'cargos'){
+			$cargos = '';
+		}
+
+		if($chave == 'formas_pgto'){
+			$formas_pgto = '';
+		}
+
+
+
+		if($chave == 'receber'){
+			$receber = '';
+		}
+
+
+		if($chave == 'pagar'){
+			$pagar = '';
+		}
+
 
 	}
 
@@ -86,19 +128,24 @@ if($home != 'ocultar'){
 
 
 
-if($usuarios == 'ocultar'){
+if($usuarios == 'ocultar' and $funcionarios == 'ocultar' and $fornecedores == 'ocultar'){
 	$menu_pessoas = 'ocultar';
 }else{
 	$menu_pessoas = '';
 }
 
 
-if($grupo_acessos == 'ocultar' and $acessos == 'ocultar'){
+if($grupo_acessos == 'ocultar' and $acessos == 'ocultar' and $cargos == 'ocultar' and $frequencias == 'ocultar' and $formas_pgto == 'ocultar'){
 	$menu_cadastros = 'ocultar';
 }else{
 	$menu_cadastros = '';
 }
 
 
+if($receber == 'ocultar' and $pagar == 'ocultar'){
+	$menu_financeiro = 'ocultar';
+}else{
+	$menu_financeiro = '';
+}
 
 ?>

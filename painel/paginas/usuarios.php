@@ -73,9 +73,15 @@ if(@$usuarios == 'ocultar'){
 						<div class="col-md-6">							
 								<label>Nível</label>
 								<select class="form-control" name="nivel" id="nivel">
-								  <option>Administrador</option>
-								  <option>Comum</option>
-								</select>							
+								  <?php 
+								  	$query = $pdo->query("SELECT * from cargos order by id asc");
+									$res = $query->fetchAll(PDO::FETCH_ASSOC);
+									$linhas = @count($res);
+									if($linhas > 0){
+										for($i=0; $i<$linhas; $i++){ ?>
+											<option value="<?php echo $res[$i]['nome'] ?>"><?php echo $res[$i]['nome'] ?></option>
+									<?php } } ?>
+								</select>								
 						</div>
 
 
@@ -171,7 +177,7 @@ if(@$usuarios == 'ocultar'){
 
 <!-- Modal Permissoes -->
 <div class="modal fade" id="modalPermissoes" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
+	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title" id="exampleModalLabel"><span id="nome_permissoes"></span>

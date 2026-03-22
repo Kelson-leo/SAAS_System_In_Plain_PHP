@@ -7,8 +7,14 @@ $email = $_POST['email_sistema'];
 $telefone = $_POST['telefone_sistema'];
 $endereco = $_POST['endereco_sistema'];
 $instagram = $_POST['instagram_sistema'];
+$multa_atraso = $_POST['multa_atraso'];
+$juros_atraso = $_POST['juros_atraso'];
 
+$multa_atraso = str_replace(',', '.', $multa_atraso);
+$multa_atraso = str_replace('%', '', $multa_atraso);
 
+$juros_atraso = str_replace(',', '.', $juros_atraso);
+$juros_atraso = str_replace('%', '', $juros_atraso);
 
 //foto logo
 $caminho = '../img/logo.png';
@@ -58,13 +64,15 @@ if(@$_FILES['foto-icone']['name'] != ""){
 }
 
 
-$query = $pdo->prepare("UPDATE $tabela SET nome = :nome, email = :email, telefone = :telefone, endereco = :endereco, instagram = :instagram where id = 1");
+$query = $pdo->prepare("UPDATE $tabela SET nome = :nome, email = :email, telefone = :telefone, endereco = :endereco, instagram = :instagram, multa_atraso = :multa_atraso, juros_atraso = :juros_atraso where id = 1");
 
 $query->bindValue(":nome", "$nome");
 $query->bindValue(":email", "$email");
 $query->bindValue(":telefone", "$telefone");
 $query->bindValue(":endereco", "$endereco");
 $query->bindValue(":instagram", "$instagram");
+$query->bindValue(":multa_atraso", "$multa_atraso");
+$query->bindValue(":juros_atraso", "$juros_atraso");
 $query->execute();
 
 echo 'Editado com Sucesso';

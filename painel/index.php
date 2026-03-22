@@ -3,6 +3,32 @@
 require_once("../conexao.php");
 require_once("verificar.php");
 
+$data_atual = date('Y-m-d');
+$mes_atual = Date('m');
+$ano_atual = Date('Y');
+$data_inicio_mes = $ano_atual."-".$mes_atual."-01";
+$data_inicio_ano = $ano_atual."-01-01";
+
+$data_ontem = date('Y-m-d', strtotime("-1 days",strtotime($data_atual)));
+$data_amanha = date('Y-m-d', strtotime("+1 days",strtotime($data_atual)));
+
+
+if($mes_atual == '04' || $mes_atual == '06' || $mes_atual == '07' || $mes_atual == '09'){
+	$data_final_mes = $ano_atual.'-'.$mes_atual.'-30';
+}else if($mes_atual == '02'){
+	$bissexto = date('L', @mktime(0, 0, 0, 1, 1, $ano_atual));
+	if($bissexto == 1){
+		$data_final_mes = $ano_atual.'-'.$mes_atual.'-29';
+	}else{
+		$data_final_mes = $ano_atual.'-'.$mes_atual.'-28';
+	}
+
+}else{
+	$data_final_mes = $ano_atual.'-'.$mes_atual.'-31';
+}
+
+
+
 $pag_inicial = 'home';
 if(@$_SESSION['nivel'] != 'Administrador'){
 	require_once("verificar_permissoes.php");
@@ -120,6 +146,26 @@ if($linhas > 0){
 
 <link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css"/> <script src="DataTables/datatables.min.js"></script>
 
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+<style type="text/css">
+		.select2-selection__rendered {
+			line-height: 36px !important;
+			font-size:16px !important;
+			color:#666666 !important;
+
+		}
+
+		.select2-selection {
+			height: 36px !important;
+			font-size:16px !important;
+			color:#666666 !important;
+
+		}
+</style>  
+
 	
 </head> 
 <body class="cbp-spmenu-push">
@@ -140,33 +186,63 @@ if($linhas > 0){
 					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
 						<ul class="sidebar-menu">
 							<li class="header">MENU NAVEGAÇÃO</li>
-							<li class="treeview <?php echo $home ?>">
+							<li class="treeview <?php echo @$home ?>">
 								<a href="index.php">
 									<i class="fa fa-dashboard"></i> <span>Home</span>
 								</a>
 							</li>
-							<li class="treeview <?php echo $menu_pessoas ?>">
+							<li class="treeview <?php echo @$menu_pessoas ?>">
 								<a href="#">
 									<i class="fa fa-users"></i>
 									<span>Pessoas</span>
 									<i class="fa fa-angle-left pull-right"></i>
 								</a>
 								<ul class="treeview-menu">
-									<li class="<?php echo $usuarios ?>"><a href="usuarios"><i class="fa fa-angle-right"></i> Usuários</a></li>
+									<li class="<?php echo @$usuarios ?>"><a href="usuarios"><i class="fa fa-angle-right"></i> Usuários</a></li>
+
+									<li class="<?php echo @$funcionarios ?>"><a href="funcionarios"><i class="fa fa-angle-right"></i> Funcionários</a></li>
+
+									<li class="<?php echo @$fornecedores ?>"><a href="fornecedores"><i class="fa fa-angle-right"></i> Fornecedores</a></li>
 									
 								</ul>
 							</li>
 
-							<li class="treeview <?php echo $menu_cadastros ?>">
+							<li class="treeview <?php echo @$menu_cadastros ?>">
 								<a href="#">
 									<i class="fa fa-plus"></i>
 									<span>Cadastros</span>
 									<i class="fa fa-angle-left pull-right"></i>
 								</a>
 								<ul class="treeview-menu">
-									<li class="<?php echo $grupo_acessos ?>"><a href="grupo_acessos"><i class="fa fa-angle-right"></i> Grupos</a></li>
 
-									<li class="<?php echo $acessos ?>"><a href="acessos"><i class="fa fa-angle-right"></i> Acessos</a></li>
+									<li class="<?php echo @$formas_pgto ?>"><a href="formas_pgto"><i class="fa fa-angle-right"></i> Formas Pgto</a></li>
+
+									<li class="<?php echo @$frequencias ?>"><a href="frequencias"><i class="fa fa-angle-right"></i> Frequências</a></li>
+
+									<li class="<?php echo @$cargos ?>"><a href="cargos"><i class="fa fa-angle-right"></i> Cargos</a></li>
+
+
+									<li class="<?php echo @$grupo_acessos ?>"><a href="grupo_acessos"><i class="fa fa-angle-right"></i> Grupos</a></li>
+
+									<li class="<?php echo @$acessos ?>"><a href="acessos"><i class="fa fa-angle-right"></i> Acessos</a></li>
+									
+								</ul>
+							</li>
+
+
+							<li class="treeview <?php echo @$menu_financeiro ?>">
+								<a href="#">
+									<i class="fa fa-dollar"></i>
+									<span>Financeiro</span>
+									<i class="fa fa-angle-left pull-right"></i>
+								</a>
+								<ul class="treeview-menu">
+									<li class="<?php echo @$receber ?>"><a href="receber"><i class="fa fa-angle-right"></i> Receber</a></li>
+
+									<li class="<?php echo @$pagar ?>"><a href="pagar"><i class="fa fa-angle-right"></i> Despesas</a></li>
+
+
+								
 									
 								</ul>
 							</li>
@@ -362,6 +438,9 @@ if($linhas > 0){
 <!-- Ajax para funcionar Mascaras JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script> 
 
+
+
+
 	
 </body>
 </html>
@@ -510,7 +589,17 @@ if($linhas > 0){
 					</div>
 
 
+					<div class="row">						
+						<div class="col-md-3">							
+								<label>Multa Atraso Conta</label>
+								<input type="text" class="form-control" id="multa_atraso" name="multa_atraso" placeholder="Valor em R$" value="<?php echo @$multa_atraso ?>">							
+						</div>	
 
+						<div class="col-md-3">							
+								<label>Júros Atraso Dia Conta</label>
+								<input type="text" class="form-control" id="juros_atraso" name="juros_atraso" placeholder="Valor em %" value="<?php echo @$juros_atraso ?>">							
+						</div>	
+					</div>
 					
 
 					
