@@ -198,6 +198,9 @@ if($linhas > 0){
 									<i class="fa fa-angle-left pull-right"></i>
 								</a>
 								<ul class="treeview-menu">
+
+									<li class="<?php echo @$clientes ?>"><a href="clientes"><i class="fa fa-angle-right"></i> Clientes</a></li>
+
 									<li class="<?php echo @$usuarios ?>"><a href="usuarios"><i class="fa fa-angle-right"></i> Usuários</a></li>
 
 									<li class="<?php echo @$funcionarios ?>"><a href="funcionarios"><i class="fa fa-angle-right"></i> Funcionários</a></li>
@@ -241,6 +244,15 @@ if($linhas > 0){
 
 									<li class="<?php echo @$pagar ?>"><a href="pagar"><i class="fa fa-angle-right"></i> Despesas</a></li>
 
+									<li class="<?php echo @$rel_financeiro ?>"><a href="" data-toggle="modal" data-target="#modalRelFin"><i class="fa fa-angle-right"></i> Relatório Financeiro</a></li>
+
+
+									<li class="<?php echo @$rel_sintetico_despesas ?>"><a href="" data-toggle="modal" data-target="#modalRelSinDesp"><i class="fa fa-angle-right"></i> Rel Sintético Despesas</a></li>
+
+										<li class="<?php echo @$rel_sintetico_receber ?>"><a href="" data-toggle="modal" data-target="#modalRelSinRec"><i class="fa fa-angle-right"></i> Rel Sintético Receber</a></li>
+
+
+									<li class="<?php echo @$rel_balanco ?>"><a href="rel/balanco_anual_class.php" target="_blank"><i class="fa fa-angle-right"></i> Rel Balanço Anual</a></li>
 
 								
 									
@@ -261,51 +273,96 @@ if($linhas > 0){
 				<!--toggle button start-->
 				<button id="showLeftPush" data-toggle="collapse" data-target=".collapse"><i class="fa fa-bars"></i></button>
 				<!--toggle button end-->
+				<?php 
+					$query = $pdo->query("SELECT * from receber where vencimento < curDate() and pago != 'Sim' order by id asc");
+					$res = $query->fetchAll(PDO::FETCH_ASSOC);
+					$linhas = @count($res);
+				 ?>
 				<div class="profile_details_left"><!--notifications of menu start -->
 					<ul class="nofitications-dropdown">
 						<li class="dropdown head-dpdn">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-envelope"></i><span class="badge">4</span></a>
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="background:#70cf86"><i class="fa fa-money" style="color:white"></i><span class="badge" style="background:green"><?php echo $linhas ?></span></a>
 							<ul class="dropdown-menu">
 								<li>
 									<div class="notification_header">
-										<h3>You have 3 new messages</h3>
+										<h3><?php echo $linhas ?> contas à receber vencidas!</h3>
 									</div>
 								</li>
-								<li><a href="#">
-									<div class="user_img"><img src="images/1.jpg" alt=""></div>
+
+								<?php 
+									$query = $pdo->query("SELECT * from receber where vencimento < curDate() and pago != 'Sim' order by id asc limit 10");
+									$res = $query->fetchAll(PDO::FETCH_ASSOC);
+									$linhas = @count($res);
+									for($i=0; $i<$linhas; $i++){
+										$valor = $res[$i]['valor'];
+										$valorF = @number_format($valor, 2, ',', '.');										
+								 ?>
+
+								<li><a href="#">									
 									<div class="notification_desc">
-										<p>Lorem ipsum dolor amet</p>
-										<p><span>1 hour ago</span></p>
+										<p><span style="color:green !important">R$ <?php echo $valorF ?></span> / <?php echo $res[$i]['descricao'] ?> </p>
+										
 									</div>
 									<div class="clearfix"></div>	
 								</a></li>
-								<li class="odd"><a href="#">
-									<div class="user_img"><img src="images/4.jpg" alt=""></div>
-									<div class="notification_desc">
-										<p>Lorem ipsum dolor amet </p>
-										<p><span>1 hour ago</span></p>
-									</div>
-									<div class="clearfix"></div>	
-								</a></li>
-								<li><a href="#">
-									<div class="user_img"><img src="images/3.jpg" alt=""></div>
-									<div class="notification_desc">
-										<p>Lorem ipsum dolor amet </p>
-										<p><span>1 hour ago</span></p>
-									</div>
-									<div class="clearfix"></div>	
-								</a></li>
-								<li><a href="#">
-									<div class="user_img"><img src="images/2.jpg" alt=""></div>
-									<div class="notification_desc">
-										<p>Lorem ipsum dolor amet </p>
-										<p><span>1 hour ago</span></p>
-									</div>
-									<div class="clearfix"></div>	
-								</a></li>
+								
+							<?php } ?>
+							
 								<li>
 									<div class="notification_bottom">
-										<a href="#">See all messages</a>
+										<a href="receber">Ver todas as contas</a>
+									</div> 
+								</li>
+							</ul>
+						</li>
+						
+
+
+					</ul>
+					<div class="clearfix"> </div>
+				</div>
+
+
+
+
+				<?php 
+					$query = $pdo->query("SELECT * from pagar where vencimento < curDate() and pago != 'Sim' order by id asc");
+					$res = $query->fetchAll(PDO::FETCH_ASSOC);
+					$linhas = @count($res);
+				 ?>
+				<div class="profile_details_left"><!--notifications of menu start -->
+					<ul class="nofitications-dropdown">
+						<li class="dropdown head-dpdn">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="background:#f7817c"><i class="fa fa-money" style="color:white"></i><span class="badge" style="background:red"><?php echo $linhas ?></span></a>
+							<ul class="dropdown-menu">
+								<li>
+									<div class="notification_header">
+										<h3><?php echo $linhas ?> contas à pagar vencidas!</h3>
+									</div>
+								</li>
+
+								<?php 
+									$query = $pdo->query("SELECT * from pagar where vencimento < curDate() and pago != 'Sim' order by id asc limit 10");
+									$res = $query->fetchAll(PDO::FETCH_ASSOC);
+									$linhas = @count($res);
+									for($i=0; $i<$linhas; $i++){
+										$valor = $res[$i]['valor'];
+										$valorF = @number_format($valor, 2, ',', '.');										
+								 ?>
+
+								<li><a href="#">									
+									<div class="notification_desc">
+										<p><span style="color:red !important">R$ <?php echo $valorF ?></span> / <?php echo $res[$i]['descricao'] ?> </p>
+										
+									</div>
+									<div class="clearfix"></div>	
+								</a></li>
+								
+							<?php } ?>
+							
+								<li>
+									<div class="notification_bottom">
+										<a href="pagar">Ver todas as contas</a>
 									</div> 
 								</li>
 							</ul>
@@ -589,7 +646,14 @@ if($linhas > 0){
 					</div>
 
 
-					<div class="row">						
+					<div class="row">	
+
+
+						<div class="col-md-3">							
+								<label>CNPJ Sistema</label>
+								<input type="text" class="form-control" id="cnpj_sistema" name="cnpj_sistema" placeholder="CNPJ" value="<?php echo @$cnpj_sistema ?>">							
+						</div>
+
 						<div class="col-md-3">							
 								<label>Multa Atraso Conta</label>
 								<input type="text" class="form-control" id="multa_atraso" name="multa_atraso" placeholder="Valor em R$" value="<?php echo @$multa_atraso ?>">							
@@ -599,8 +663,37 @@ if($linhas > 0){
 								<label>Júros Atraso Dia Conta</label>
 								<input type="text" class="form-control" id="juros_atraso" name="juros_atraso" placeholder="Valor em %" value="<?php echo @$juros_atraso ?>">							
 						</div>	
+
+						<div class="col-md-3">							
+								<label>Marca D'agua Rel</label>
+								<select name="marca_dagua" class="form-control">
+									<option value="Sim" <?php if($marca_dagua == 'Sim'){ ?> selected <?php } ?>>Sim</option>
+									<option value="Não" <?php if($marca_dagua == 'Não'){ ?> selected <?php } ?>>Não</option>
+								</select>						
+						</div>	
+
+						
 					</div>
-					
+
+
+					<div class="row">
+
+						<div class="col-md-3">							
+								<label>Assinatura Recibo</label>
+								<select name="assinatura_recibo" class="form-control">
+									<option value="Sim" <?php if($assinatura_recibo == 'Sim'){ ?> selected <?php } ?>>Sim</option>
+									<option value="Não" <?php if($assinatura_recibo == 'Não'){ ?> selected <?php } ?>>Não</option>
+								</select>						
+						</div>
+
+						<div class="col-md-3">							
+								<label>Impressão Automática</label>
+								<select name="impressao_automatica" class="form-control">
+									<option value="Sim" <?php if($impressao_automatica == 'Sim'){ ?> selected <?php } ?>>Sim</option>
+									<option value="Não" <?php if($impressao_automatica == 'Não'){ ?> selected <?php } ?>>Não</option>
+								</select>						
+						</div>
+					</div>
 
 					
 
@@ -650,6 +743,19 @@ if($linhas > 0){
 							</div>
 
 
+							<div class="col-md-4">						
+								<div class="form-group"> 
+									<label>Assinatura (*Jpg)</label> 
+									<input class="form-control" type="file" name="assinatura_rel" onChange="carregarImgAssinatura();" id="assinatura_rel">
+								</div>						
+							</div>
+							<div class="col-md-2">
+								<div id="divImg">
+									<img src="../img/assinatura.jpg"  width="80px" id="target-assinatura">									
+								</div>
+							</div>
+
+
 						
 					</div>					
 				
@@ -666,6 +772,224 @@ if($linhas > 0){
 </div>
 
 
+
+
+
+
+
+<!-- Modal Rel Financeiro -->
+<div class="modal fade" id="modalRelFin" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="exampleModalLabel">Relatório Financeiro</h4>
+				<button id="btn-fechar-rel" type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -25px">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<form method="POST" action="rel/financeiro_class.php" target="_blank">
+			<div class="modal-body">	
+			<div class="row">
+				<div class="col-md-4">
+					<label>Data Inicial</label>
+					<input type="date" name="dataInicial" class="form-control" value="<?php echo $data_atual ?>">
+				</div>
+
+				<div class="col-md-4">
+					<label>Data Final</label>
+					<input type="date" name="dataFinal" class="form-control" value="<?php echo $data_atual ?>">
+				</div>
+
+				<div class="col-md-4">
+					<label>Filtro Data</label>
+					<select name="filtro_data" class="form-control">
+						<option value="data_lanc">Data de Lançamento</option>
+						<option value="vencimento">Data de Vencimento</option>
+						<option value="data_pgto">Data de Pagamento</option>
+					</select>
+				</div>
+			</div>		
+
+
+			<div class="row">				
+				<div class="col-md-4">
+					<label>Entradas / Saídas</label>
+					<select name="filtro_tipo" class="form-control">
+						<option value="receber">Entradas / Ganhos</option>
+						<option value="pagar">Saídas / Despesas</option>
+					</select>
+				</div>
+
+				<div class="col-md-4">
+					<label>Tipo Lançamento</label>
+					<select name="filtro_lancamento" class="form-control">
+						<option value="">Tudo</option>
+						<option value="Conta">Ganhos / Despesas</option>
+
+					</select>
+				</div>
+				<div class="col-md-4">
+					<label>Pendentes / Pago</label>
+					<select name="filtro_pendentes" class="form-control">
+						<option value="">Tudo</option>
+						<option value="Não">Pendentes</option>
+						<option value="Sim">Pago</option>
+					</select>
+				</div>			
+			</div>		
+				
+						
+
+			</div>
+			<div class="modal-footer">       
+				<button type="submit" class="btn btn-primary">Gerar</button>
+			</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+<!-- Modal Rel Sintético Despesas -->
+<div class="modal fade" id="modalRelSinDesp" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="exampleModalLabel">Relatório Sintético Contas à Pagar</h4>
+				<button id="btn-fechar-rel" type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -25px">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<form method="POST" action="rel/sintetico_class.php" target="_blank">
+			<div class="modal-body">	
+			<div class="row">
+				<div class="col-md-4">
+					<label>Data Inicial</label>
+					<input type="date" name="dataInicial" class="form-control" value="<?php echo $data_atual ?>">
+				</div>
+
+				<div class="col-md-4">
+					<label>Data Final</label>
+					<input type="date" name="dataFinal" class="form-control" value="<?php echo $data_atual ?>">
+				</div>
+
+				<div class="col-md-4">
+					<label>Filtro Data</label>
+					<select name="filtro_data" class="form-control">
+						<option value="data_lanc">Data de Lançamento</option>
+						<option value="vencimento">Data de Vencimento</option>
+						<option value="data_pgto">Data de Pagamento</option>
+					</select>
+				</div>
+			</div>		
+
+
+			<div class="row">			
+			
+
+				<div class="col-md-4">
+					<label>Tipo Filtro Contas</label>
+					<select name="filtro_lancamento" class="form-control">					
+						<option value="fornecedor">Fornecedores</option>
+						<option value="funcionario">Funcionário</option>
+
+					</select>
+				</div>
+				<div class="col-md-4">
+					<label>Pendentes / Pago</label>
+					<select name="filtro_pendentes" class="form-control">
+						<option value="">Tudo</option>
+						<option value="Não">Pendentes</option>
+						<option value="Sim">Pago</option>
+					</select>
+				</div>			
+			</div>		
+				
+						
+
+			</div>
+			<div class="modal-footer">       
+				<button type="submit" class="btn btn-primary">Gerar</button>
+			</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+
+<!-- Modal Rel Sintético Recebimentos -->
+<div class="modal fade" id="modalRelSinRec" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="exampleModalLabel">Relatório Sintético Recebimentos</h4>
+				<button id="btn-fechar-rel" type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -25px">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<form method="POST" action="rel/sintetico_recebimentos_class.php" target="_blank">
+			<div class="modal-body">	
+			<div class="row">
+				<div class="col-md-4">
+					<label>Data Inicial</label>
+					<input type="date" name="dataInicial" class="form-control" value="<?php echo $data_atual ?>">
+				</div>
+
+				<div class="col-md-4">
+					<label>Data Final</label>
+					<input type="date" name="dataFinal" class="form-control" value="<?php echo $data_atual ?>">
+				</div>
+
+				<div class="col-md-4">
+					<label>Filtro Data</label>
+					<select name="filtro_data" class="form-control">
+						<option value="data_lanc">Data de Lançamento</option>
+						<option value="vencimento">Data de Vencimento</option>
+						<option value="data_pgto">Data de Pagamento</option>
+					</select>
+				</div>
+			</div>		
+
+
+			<div class="row">			
+			
+
+				<div class="col-md-4">
+					<label>Tipo Filtro Contas</label>
+					<select name="filtro_lancamento" class="form-control">					
+						<option value="cliente">Clientes</option>						
+
+					</select>
+				</div>
+				<div class="col-md-4">
+					<label>Pendentes / Pago</label>
+					<select name="filtro_pendentes" class="form-control">
+						<option value="">Tudo</option>
+						<option value="Não">Pendentes</option>
+						<option value="Sim">Pago</option>
+					</select>
+				</div>			
+			</div>		
+				
+						
+
+			</div>
+			<div class="modal-footer">       
+				<button type="submit" class="btn btn-primary">Gerar</button>
+			</div>
+			</form>
+		</div>
+	</div>
+</div>
 
 
 
@@ -831,6 +1155,28 @@ if($linhas > 0){
 	function carregarImgIcone() {
     var target = document.getElementById('target-icone');
     var file = document.querySelector("#foto-icone").files[0];
+    
+        var reader = new FileReader();
+
+        reader.onloadend = function () {
+            target.src = reader.result;
+        };
+
+        if (file) {
+            reader.readAsDataURL(file);
+
+        } else {
+            target.src = "";
+        }
+    }
+</script>
+
+
+
+<script type="text/javascript">
+	function carregarImgAssinatura() {
+    var target = document.getElementById('target-assinatura');
+    var file = document.querySelector("#assinatura_rel").files[0];
     
         var reader = new FileReader();
 

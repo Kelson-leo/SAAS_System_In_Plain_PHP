@@ -6,12 +6,12 @@ date_default_timezone_set('America/Sao_Paulo');
 $url_sistema = "http://$_SERVER[HTTP_HOST]/";
 $url = explode("//", $url_sistema);
 if($url[1] == 'localhost/'){
-	$url_sistema = "http://$_SERVER[HTTP_HOST]/projeto/";
+	$url_sistema = "http://$_SERVER[HTTP_HOST]/projeto_rel/";
 }
 
 //dados conexão bd local
 $servidor = 'localhost';
-$banco = 'projeto_fin';
+$banco = 'projeto_rel';
 $usuario = 'root';
 $senha = '';
 
@@ -32,7 +32,7 @@ $query = $pdo->query("SELECT * from config");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $linhas = @count($res);
 if($linhas == 0){
-	$pdo->query("INSERT INTO config SET nome = '$nome_sistema', email = '$email_sistema', telefone = '$telefone_sistema', logo = 'logo.png', logo_rel = 'logo.jpg', icone = 'icone.png', ativo = 'Sim', multa_atraso = '0', juros_atraso = '0'");
+	$pdo->query("INSERT INTO config SET nome = '$nome_sistema', email = '$email_sistema', telefone = '$telefone_sistema', logo = 'logo.png', logo_rel = 'logo.jpg', icone = 'icone.png', ativo = 'Sim', multa_atraso = '0', juros_atraso = '0', marca_dagua = 'Sim', assinatura_recibo = 'Não', impressao_automatica = 'Não'");
 }else{
 $nome_sistema = $res[0]['nome'];
 $email_sistema = $res[0]['email'];
@@ -45,6 +45,12 @@ $icone_sistema = $res[0]['icone'];
 $ativo_sistema = $res[0]['ativo'];
 $multa_atraso = $res[0]['multa_atraso'];
 $juros_atraso = $res[0]['juros_atraso'];
+$marca_dagua = $res[0]['marca_dagua'];
+$assinatura_recibo = $res[0]['assinatura_recibo'];
+$impressao_automatica = $res[0]['impressao_automatica'];
+$cnpj_sistema = $res[0]['cnpj'];
+
+$tel_whats = '55'.preg_replace('/[ ()-]+/' , '' , $telefone_sistema);
 
 if($ativo_sistema != 'Sim' and $ativo_sistema != ''){ ?>
 	<style type="text/css">

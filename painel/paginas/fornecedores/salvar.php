@@ -2,6 +2,9 @@
 $tabela = 'fornecedores';
 require_once("../../../conexao.php");
 
+@session_start();
+$id_usuario = @$_SESSION['id'];
+
 $nome = $_POST['nome'];
 $email = $_POST['email'];
 $telefone = $_POST['telefone'];
@@ -31,7 +34,7 @@ if(@count($res) > 0 and $id != $id_reg){
 }
 
 if($id == ""){
-$query = $pdo->prepare("INSERT INTO $tabela SET nome = :nome, email = :email, telefone = :telefone, data = curDate(), endereco = :endereco, pix = :pix ");
+$query = $pdo->prepare("INSERT INTO $tabela SET nome = :nome, email = :email, telefone = :telefone, data = curDate(), endereco = :endereco, pix = :pix, usuario = '$id_usuario' ");
 	
 }else{
 $query = $pdo->prepare("UPDATE $tabela SET nome = :nome, email = :email, telefone = :telefone, endereco = :endereco, pix = :pix where id = '$id'");

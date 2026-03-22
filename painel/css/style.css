@@ -8466,7 +8466,9 @@ h4.asd label {
 }
 /*--//responsive-design---*/
 
-
+.padding_zero{
+  padding:0px;
+}
 
 @media only screen and (max-width: 700px) {
   .esc{
@@ -8483,6 +8485,16 @@ h4.asd label {
 
   .altura_grafico{
     height:500px;
+  }
+
+  .padding_zero{
+    padding:15px;
+  }
+
+  .botao_rel{
+    position:absolute;
+    top:90px;
+    right:20px;
   }
 
   

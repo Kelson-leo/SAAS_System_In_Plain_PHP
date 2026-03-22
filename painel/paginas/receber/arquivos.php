@@ -47,14 +47,14 @@ $query = $pdo->prepare("INSERT INTO $tabela SET nome = :nome,  data_cad = curDat
 $query->bindValue(":nome", "$nome");
 $query->execute();
 
-/*
+
 if($cliente != "0"){
 	$query = $pdo->prepare("INSERT INTO $tabela SET nome = :nome,  data_cad = curDate(), usuario = '$id_usuario', arquivo = '$foto', registro = 'Cliente', id_reg = '$cliente'");
 	$query->bindValue(":nome", "$nome");
 	$query->execute();
 	
 }
-*/
+
 
 
 echo 'Inserido com Sucesso';

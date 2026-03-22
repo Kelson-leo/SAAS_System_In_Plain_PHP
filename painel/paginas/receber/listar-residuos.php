@@ -18,7 +18,7 @@ echo <<<HTML
 HTML;
 
 
-$query = $pdo->query("SELECT * from receber where id_ref = '$id' and referencia = 'Residuo' order by id desc ");
+$query = $pdo->query("SELECT * from receber where id_ref = '$id' and residuo = 'Sim' order by id desc ");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 for($i=0; $i < @count($res); $i++){
 	foreach ($res[$i] as $key => $value){} 

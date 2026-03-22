@@ -36,6 +36,7 @@ $("#form").submit(function () {
     var formData = new FormData(this);
 
     $('#mensagem').text('Salvando...')
+    $('#btn_salvar').hide();
 
     $.ajax({
         url: 'paginas/' + pag + "/salvar.php",
@@ -58,6 +59,7 @@ $("#form").submit(function () {
                 $('#mensagem').text(mensagem)
             }
 
+            $('#btn_salvar').show();
 
         },
 

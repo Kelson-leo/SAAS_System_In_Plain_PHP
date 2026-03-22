@@ -108,7 +108,7 @@ if(@$usuarios == 'ocultar'){
 				<small><div id="mensagem" align="center"></div></small>
 			</div>
 			<div class="modal-footer">       
-				<button type="submit" class="btn btn-primary">Salvar</button>
+				<button id="btn_salvar" type="submit" class="btn btn-primary">Salvar</button>
 			</div>
 			</form>
 		</div>

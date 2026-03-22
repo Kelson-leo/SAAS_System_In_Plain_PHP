@@ -45,7 +45,13 @@ if($descricao == "" and $cliente == "0"){
 	exit();
 }
 
-$nome_cliente = 'Colocar Depois';
+$query2 = $pdo->query("SELECT * FROM clientes where id = '$cliente'");
+$res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
+if(@count($res2) > 0){
+	$nome_cliente = $res2[0]['nome'];
+}else{
+	$nome_cliente = 'Sem Registro';
+}
 
 if($descricao == ""){
 	$descricao = $nome_cliente;
@@ -91,7 +97,7 @@ if(@$_FILES['foto']['name'] != ""){
 
 
 if($id == ""){
-$query = $pdo->prepare("INSERT INTO $tabela SET descricao = :descricao, cliente = :cliente, valor = :valor, vencimento = '$vencimento' $pgto, data_lanc = curDate(), forma_pgto = '$forma_pgto', frequencia = '$frequencia', obs = :obs, arquivo = '$foto', subtotal = :valor, usuario_lanc = '$id_usuario' $usu_pgto, pago = '$pago' ");
+$query = $pdo->prepare("INSERT INTO $tabela SET descricao = :descricao, cliente = :cliente, valor = :valor, vencimento = '$vencimento' $pgto, data_lanc = curDate(), forma_pgto = '$forma_pgto', frequencia = '$frequencia', obs = :obs, arquivo = '$foto', subtotal = :valor, usuario_lanc = '$id_usuario' $usu_pgto, pago = '$pago', referencia = 'Conta' ");
 	
 }else{
 $query = $pdo->prepare("UPDATE $tabela SET descricao = :descricao, cliente = :cliente, valor = :valor, vencimento = '$vencimento' $pgto, forma_pgto = '$forma_pgto', frequencia = '$frequencia', obs = :obs, arquivo = '$foto', subtotal = :valor where id = '$id'");

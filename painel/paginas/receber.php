@@ -10,7 +10,7 @@ if(@$receber == 'ocultar'){
 
 <div class="main-page margin-mobile">
 
-	<div class="row">	
+	<div class="row" >	
 		<div class="col-md-4" style="margin-bottom: 5px">
 			<a onclick="inserir()" type="button" class="btn btn-primary"><span class="fa fa-plus"></span> Receber</a>
 
@@ -41,14 +41,14 @@ if(@$receber == 'ocultar'){
 			</li>	
 		</div>
 
-
-		<div class="col-md-3">
+		<form action="rel/receber_class.php" target="_blank" method="POST">
+		<div class="col-md-3" >
 			<input type="date" name="dataInicial" id="dataInicial" style="height:31px; width:49%; font-size: 13px;" value="<?php echo $data_inicio_mes ?>" onchange="buscar()">
 
 			<input type="date" name="dataFinal" id="dataFinal" style="height:31px; width:49%; font-size: 13px" value="<?php echo $data_final_mes ?>" onchange="buscar()">	
 		</div>
 
-		<div class="col-md-2" >
+		<div class="col-md-1 padding_zero">
 			<select class="form-control" name="pago" id="pago" style="height: 31px" onchange="buscar()">
 				<option value="">Todas</option>
 				<option value="Sim">Pagas</option>
@@ -67,6 +67,12 @@ if(@$receber == 'ocultar'){
 		</div>
 
 		<input type="hidden" name="tipo_data" id="tipo_data">
+
+		<div class="col-md-1 botao_rel">
+			<button type="submit" class="btn btn-danger" title="Gerar Relatório"><i class="fa fa-file-pdf-o"></i></button>
+		</div>
+		</form>
+		
 	</div>	
 
 
@@ -108,11 +114,19 @@ if(@$receber == 'ocultar'){
 
 						<div class="col-md-5">							
 							<label>Cliente</label>
-							<select name="cliente" id="cliente" class="sel2" style="width:100%; height:35px">
-								<option value="0">Nenhum</option>
-								<option value="1">Cliente 1</option>
-								<option value="2">Cliente 2</option>
-							</select>							
+								<select name="cliente" id="cliente" class="sel2" style="width:100%; height:35px">
+								<option value="0">Selecione um Cliente</option>
+								<?php 
+								$query = $pdo->query("SELECT * from clientes order by id asc");
+								$res = $query->fetchAll(PDO::FETCH_ASSOC);
+								$linhas = @count($res);
+								if($linhas > 0){
+									for($i=0; $i<$linhas; $i++){
+										echo '<option value="'.$res[$i]['id'].'">'.$res[$i]['nome'].'</option>';
+									}
+								}
+								?>	
+							</select>								
 						</div>
 
 						
@@ -206,7 +220,7 @@ if(@$receber == 'ocultar'){
 					<small><div id="mensagem" align="center"></div></small>
 				</div>
 				<div class="modal-footer">       
-					<button type="submit" class="btn btn-primary">Salvar</button>
+					<button id="btn_salvar" type="submit" class="btn btn-primary">Salvar</button>
 				</div>
 			</form>
 		</div>

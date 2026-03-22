@@ -61,7 +61,7 @@ $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $linhas = @count($res);
 if($linhas > 0){
 echo <<<HTML
-<small>
+<small><small>
 	<table class="table table-hover" id="tabela">
 	<thead> 
 	<tr> 
@@ -185,10 +185,12 @@ if($pago == 'Sim'){
 	$classe_pago = 'verde';
 	$ocultar = 'ocultar';
 	$total_pago += $subtotal;
+	$ocultar_pendentes = '';
 }else{
 	$classe_pago = 'text-danger';
 	$ocultar = '';
 	$total_pendentes += $valor;
+	$ocultar_pendentes = 'ocultar';
 }	
 
 $valor_multa = 0;
@@ -216,7 +218,7 @@ $taxa_conta = $taxa_pgto * $valor / 100;
 //PEGAR RESIDUOS DA CONTA
 	$total_resid = 0;
 	$valor_com_residuos = 0;
-	$query2 = $pdo->query("SELECT * FROM $tabela WHERE id_ref = '$id' and referencia = 'Residuo'");
+	$query2 = $pdo->query("SELECT * FROM $tabela WHERE id_ref = '$id' and residuo = 'Sim'");
 	$res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
 	if(@count($res2) > 0){
 
@@ -317,6 +319,10 @@ echo <<<HTML
 		<big><a href="#" onclick="arquivo('{$id}', '{$descricao}')" title="Inserir / Ver Arquivos"><i class="fa fa-file-o " style="color:#22146e"></i></a></big>
 
 
+	<form   method="POST" action="rel/imp_recibo_pagar.php" target="_blank" style="display:inline-block">
+					<input type="hidden" name="id" value="{$id}">
+					<big><button class="{$ocultar_pendentes}" title="Imprimir Recibo 80mmm" style="background:transparent; border:none; margin:0; padding:0"><i class="fa fa-print " style="color:#666464"></i></button></big>
+					</form>
 
 
 </td>
@@ -331,7 +337,7 @@ echo <<<HTML
 <small><div align="center" id="mensagem-excluir"></div></small>
 
 </table>
-
+</small>
 <br>
 
 			<span style="font-size: 13px; border:1px solid #6092a8; padding:5px; ">

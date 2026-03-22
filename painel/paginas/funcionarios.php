@@ -7,6 +7,8 @@ if(@$funcionarios == 'ocultar'){
     exit();
 }
  ?>
+
+<div class="main-page margin-mobile">
 <a onclick="inserir()" type="button" class="btn btn-primary"><span class="fa fa-plus"></span> Funcionário</a>
 
 
@@ -22,6 +24,8 @@ if(@$funcionarios == 'ocultar'){
 		</li>										
 		</ul>
 </li>
+
+</div>
 
 <div class="bs-example widget-shadow" style="padding:15px" id="listar">
 

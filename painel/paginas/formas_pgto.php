@@ -62,7 +62,7 @@ if(@$pgto == 'ocultar'){
 							</div> 	
 						</div>
 						<div class="col-md-3">
-							<button type="submit" class="btn btn-primary">Salvar</button>
+							<button id="btn_salvar" type="submit" class="btn btn-primary">Salvar</button>
 						
 						</div>
 					</div>

@@ -66,7 +66,7 @@ $frequencia = $res[0]['frequencia'];
 $saida_antiga = $res[0]['forma_pgto'];
 $arquivo = $res[0]['arquivo'];
 $pago = $res[0]['pago'];
-
+$referencia = $res[0]['referencia'];
 
 if($fornecedor == ""){
 	$fornecedor = 0;
@@ -118,7 +118,7 @@ if($valor == $valor_antigo){
 
 
 	if(@$dias_frequencia > 0){
-		$pdo->query("INSERT INTO $tabela set descricao = '$descricao', fornecedor = '$fornecedor', funcionario = '$funcionario', valor = '$valor_antigo', data_lanc = curDate(), vencimento = '$nova_data_vencimento', frequencia = '$frequencia', forma_pgto = '$saida_antiga', arquivo = '$arquivo', pago = 'Não'");
+		$pdo->query("INSERT INTO $tabela set descricao = '$descricao', fornecedor = '$fornecedor', funcionario = '$funcionario', valor = '$valor_antigo', data_lanc = curDate(), vencimento = '$nova_data_vencimento', frequencia = '$frequencia', forma_pgto = '$saida_antiga', arquivo = '$arquivo', pago = 'Não', referencia = '$referencia', usuario_lanc = '$id_usuario'");
 				$id_ult_registro = $pdo->lastInsertId();				
 	}
 
@@ -129,7 +129,7 @@ if($valor == $valor_antigo){
 	$descricao = '(Resíduo) ' .$descricao;
 	//PEGAR RESIDUOS DA CONTA
 	$total_resid = 0;
-	$query = $pdo->query("SELECT * FROM $tabela WHERE id_ref = '$id' and referencia = 'Residuo'");
+	$query = $pdo->query("SELECT * FROM $tabela WHERE id_ref = '$id' and residuo = 'Sim'");
 	$res = $query->fetchAll(PDO::FETCH_ASSOC);
 	if(@count($res) > 0){
 	
@@ -142,7 +142,7 @@ if($valor == $valor_antigo){
 
 	$valor_antigo = $valor_antigo - ($subtotal - $taxa - $multa - $juros);
 
-	$pdo->query("INSERT INTO $tabela set id_ref = '$id', referencia = 'Residuo', valor = '$valor_padrao', data_pgto = curDate(), vencimento = curDate(), data_lanc = curDate(), descricao = '$descricao', usuario_lanc = '$id_usuario', usuario_pgto = '$id_usuario', fornecedor = '$fornecedor', funcionario = '$funcionario', forma_pgto = '$saida', frequencia = '$frequencia', arquivo = '$arquivo', subtotal = '$subtotal', pago = 'Sim', taxa = '$taxa', multa = '$multa', juros = '$juros', desconto = '$desconto'");
+	$pdo->query("INSERT INTO $tabela set id_ref = '$id', referencia = '$referencia', valor = '$valor_padrao', data_pgto = curDate(), vencimento = curDate(), data_lanc = curDate(), descricao = '$descricao', usuario_lanc = '$id_usuario', usuario_pgto = '$id_usuario', fornecedor = '$fornecedor', funcionario = '$funcionario', forma_pgto = '$saida', frequencia = '$frequencia', arquivo = '$arquivo', subtotal = '$subtotal', pago = 'Sim', taxa = '$taxa', multa = '$multa', juros = '$juros', desconto = '$desconto', residuo = 'Sim'");
 
 	$pdo->query("UPDATE $tabela set forma_pgto = '$saida', usuario_pgto = '$id_usuario', valor = '$valor_antigo', data_pgto = curDate() where id = '$id'");
 
