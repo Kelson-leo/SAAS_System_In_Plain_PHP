@@ -61,22 +61,23 @@ $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $linhas = @count($res);
 if($linhas > 0){
 echo <<<HTML
-<small><small>
-	<table class="table table-hover" id="tabela">
+<small>
+	<table class="table table-bordered text-nowrap border-bottom dt-responsive" id="tabela">
 	<thead> 
 	<tr> 
+	<th align="center" width="5%" class="text-center">Selecionar</th>
 	<th>Descrição</th>	
 	<th class="">Valor</th>	
 	<th class="esc">Pessoa</th>	
 	<th class="esc">Vencimento</th>	
 	<th class="esc">Pagamento</th>	
-	<th class="esc">Forma Pgto</th>	
-	<th class="esc">Frequência</th>	
+	
 	<th class="esc">Arquivo</th>	
 	<th>Ações</th>
 	</tr> 
 	</thead> 
 	<tbody>	
+	<small>
 HTML;
 
 
@@ -283,45 +284,42 @@ if($fornecedor != 0 || $funcionario != 0){
 
 echo <<<HTML
 <tr>
-<td>
-<input type="checkbox" id="seletor-{$id}" class="form-check-input" onchange="selecionar('{$id}')">
-<i class="fa fa-square {$classe_pago} mr-1"></i>
-{$descricao}
+<td align="center">
+<div class="custom-checkbox custom-control">
+<input type="checkbox" class="custom-control-input" id="seletor-{$id}" onchange="selecionar('{$id}')">
+<label for="seletor-{$id}" class="custom-control-label mt-1 text-dark"></label>
+</div>
 </td>
+<td><i class="fa fa-square {$classe_pago} mr-1"></i> {$descricao}</td>
 <td class="">R$ {$valor_finalF} <small><a href="#" onclick="mostrarResiduos('{$id}')" class="text-danger" title="Ver Resíduos">{$vlr_antigo_conta}</a></small></td>	
 <td class="esc">{$nome_pessoa}</td>
 <td class="esc {$classe_venc}">{$vencimentoF}</td>
 <td class="esc">{$data_pgtoF}</td>
-<td class="esc">{$nome_pgto}</td>
-<td class="esc">{$nome_frequencia}</td>
 <td class="esc"><a href="images/contas/{$arquivo}" target="_blank"><img src="images/contas/{$tumb_arquivo}" width="25px"></a></td>
 <td>
-	<big><a href="#" onclick="editar('{$id}','{$descricao}','{$valor}','{$fornecedor}','{$funcionario}','{$vencimento}','{$data_pgto}','{$forma_pgto}','{$frequencia}','{$obs}','{$tumb_arquivo}')" title="Editar Dados"><i class="fa fa-edit text-primary"></i></a></big>
+	<big><a class="icones_mobile" href="#" onclick="editar('{$id}','{$descricao}','{$valor}','{$fornecedor}','{$funcionario}','{$vencimento}','{$data_pgto}','{$forma_pgto}','{$frequencia}','{$obs}','{$tumb_arquivo}')" title="Editar Dados"><i class="fa fa-edit text-primary"></i></a></big>
 
-	<li class="dropdown head-dpdn2" style="display: inline-block;">
-		<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><big><i class="fa fa-trash-o text-danger"></i></big></a>
+		<div class="dropdown" style="display: inline-block;">                      
+                        <a class="icones_mobile" href="#" aria-expanded="false" aria-haspopup="true" data-bs-toggle="dropdown" class="dropdown"><i class="fa fa-trash text-danger"></i> </a>
+                        <div  class="dropdown-menu tx-13">
+                        <div class="dropdown-item-text botao_excluir">
+                        <p>Confirmar Exclusão? <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
+                        </div>
+                        </div>
+                        </div>
 
-		<ul class="dropdown-menu" style="margin-left:-230px;">
-		<li>
-		<div class="notification_desc2">
-		<p>Confirmar Exclusão? <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
-		</div>
-		</li>										
-		</ul>
-</li>
+<big><a class="icones_mobile" href="#" onclick="mostrar('{$descricao}','{$valorF}','{$nome_pessoa}','{$vencimentoF}','{$data_pgtoF}','{$nome_pgto}','{$nome_frequencia}','{$obs}','{$tumb_arquivo}','{$multaF}','{$jurosF}','{$descontoF}','{$taxaF}','{$subtotalF}','{$nome_usu_lanc}','{$nome_usu_pgto}', '{$pago}', '{$arquivo}', '{$telefone_pessoa}', '{$pix_pessoa}', '{$tipo_pessoa}')" title="Mostrar Dados"><i class="fa fa-info-circle text-primary"></i></a></big>
 
-<big><a href="#" onclick="mostrar('{$descricao}','{$valorF}','{$nome_pessoa}','{$vencimentoF}','{$data_pgtoF}','{$nome_pgto}','{$nome_frequencia}','{$obs}','{$tumb_arquivo}','{$multaF}','{$jurosF}','{$descontoF}','{$taxaF}','{$subtotalF}','{$nome_usu_lanc}','{$nome_usu_pgto}', '{$pago}', '{$arquivo}', '{$telefone_pessoa}', '{$pix_pessoa}', '{$tipo_pessoa}')" title="Mostrar Dados"><i class="fa fa-info-circle text-primary"></i></a></big>
+<big><a class="{$ocultar} icones_mobile" href="#" onclick="baixar('{$id}', '{$valor}', '{$descricao}', '{$forma_pgto}', '{$taxa_conta}', '{$valor_multa}', '{$valor_juros}')" title="Baixar Conta"><i class="fa fa-check-square " style="color:#079934"></i></a></big>
 
-<big><a class="{$ocultar}" href="#" onclick="baixar('{$id}', '{$valor}', '{$descricao}', '{$forma_pgto}', '{$taxa_conta}', '{$valor_multa}', '{$valor_juros}')" title="Baixar Conta"><i class="fa fa-check-square " style="color:#079934"></i></a></big>
+	<big><a class="{$ocultar} icones_mobile" href="#" onclick="parcelar('{$id}', '{$valor}', '{$descricao}')" title="Parcelar Conta"><i class="fa fa-calendar-o " style="color:#7f7f7f"></i></a></big>
 
-	<big><a class="{$ocultar}" href="#" onclick="parcelar('{$id}', '{$valor}', '{$descricao}')" title="Parcelar Conta"><i class="fa fa-calendar-o " style="color:#7f7f7f"></i></a></big>
-
-		<big><a href="#" onclick="arquivo('{$id}', '{$descricao}')" title="Inserir / Ver Arquivos"><i class="fa fa-file-o " style="color:#22146e"></i></a></big>
+		<big><a class="icones_mobile" href="#" onclick="arquivo('{$id}', '{$descricao}')" title="Inserir / Ver Arquivos"><i class="fa fa-file-o " style="color:#22146e"></i></a></big>
 
 
 	<form   method="POST" action="rel/imp_recibo_pagar.php" target="_blank" style="display:inline-block">
 					<input type="hidden" name="id" value="{$id}">
-					<big><button class="{$ocultar_pendentes}" title="Imprimir Recibo 80mmm" style="background:transparent; border:none; margin:0; padding:0"><i class="fa fa-print " style="color:#666464"></i></button></big>
+					<big><button class="{$ocultar_pendentes} icones_mobile" title="Imprimir Recibo 80mmm" style="background:transparent; border:none; margin:0; padding:0"><i class="fa fa-print " style="color:#666464"></i></button></big>
 					</form>
 
 
@@ -333,6 +331,7 @@ HTML;
 
 
 echo <<<HTML
+</small>
 </tbody>
 <small><div align="center" id="mensagem-excluir"></div></small>
 
@@ -340,7 +339,7 @@ echo <<<HTML
 </small>
 <br>
 
-			<span style="font-size: 13px; border:1px solid #6092a8; padding:5px; ">
+			<span class="ocultar_mobile" style="font-size: 13px; border:1px solid #6092a8; padding:5px; ">
 				Filtrar Por:  
 				<a href="#" onclick="tipoData('vencimento')">Vencimento</a> / 
 				<a href="#" onclick="tipoData('data_pgto')">Pagamento</a> /
@@ -355,7 +354,7 @@ echo <<<HTML
 HTML;
 
 }else{
-	echo '<small>Nenhum Registro Encontrado!</small>';
+	echo 'Nenhum Registro Encontrado!';
 }
 ?>
 
@@ -491,8 +490,12 @@ HTML;
 		var id = ids.split("-");
 		
 		for(i=0; i<id.length-1; i++){
-			excluir(id[i]);			
+			excluirMultiplos(id[i]);			
 		}
+
+		setTimeout(() => {
+		  	listar();	
+		}, 1000);
 
 		limparCampos();
 	}

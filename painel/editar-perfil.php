@@ -59,7 +59,7 @@ $imagem_temp = @$_FILES['foto']['tmp_name'];
 
 if(@$_FILES['foto']['name'] != ""){
 	$ext = pathinfo($nome_img, PATHINFO_EXTENSION);   
-	if($ext == 'png' or $ext == 'jpg' or $ext == 'jpeg' or $ext == 'gif'){ 
+	if($ext == 'png' or $ext == 'jpg' or $ext == 'jpeg' or $ext == 'gif' or $ext == 'webp' or $ext == 'PNG' or $ext == 'JPG' or $ext == 'JPEG' or $ext == 'GIF' or $ext == 'WEBP'){ 
 	
 			//EXCLUO A FOTO ANTERIOR
 			if($foto != "sem-foto.jpg"){
@@ -68,7 +68,16 @@ if(@$_FILES['foto']['name'] != ""){
 
 			$foto = $nome_img;
 		
-		move_uploaded_file($imagem_temp, $caminho);
+			//pegar o tamanho da imagem
+			list($largura, $altura) = getimagesize($imagem_temp);
+		 	if($largura > 1400){
+		 		$image = imagecreatefromjpeg($imagem_temp);
+		        // Reduza a qualidade para 20% ajuste conforme necessário
+		        imagejpeg($image, $caminho, 20);
+		        imagedestroy($image);
+		 	}else{
+		 		move_uploaded_file($imagem_temp, $caminho);
+		 	}
 	}else{
 		echo 'Extensão de Imagem não permitida!';
 		exit();

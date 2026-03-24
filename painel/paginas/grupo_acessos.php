@@ -8,53 +8,57 @@ if(@$grupo_acessos == 'ocultar'){
 
  ?>
 
-<div class="main-page margin-mobile">
+<div class="justify-content-between">
+ 	<div class="left-content mt-2 mb-3">
+ <a class="btn ripple btn-primary text-white" onclick="inserir()" type="button"><i class="fe fe-plus me-2"></i> Adicionar Grupos</a>
 
-<a onclick="inserir()" type="button" class="btn btn-primary"><span class="fa fa-plus"></span> Grupo</a>
 
 
-
-<li class="dropdown head-dpdn2" style="display: inline-block;">		
-		<a href="#" data-toggle="dropdown"  class="btn btn-danger dropdown-toggle" id="btn-deletar" style="display:none"><span class="fa fa-trash-o"></span> Deletar</a>
-
-		<ul class="dropdown-menu">
-		<li>
-		<div class="notification_desc2">
-		<p>Excluir Selecionados? <a href="#" onclick="deletarSel()"><span class="text-danger">Sim</span></a></p>
-		</div>
-		</li>										
-		</ul>
-</li>
-
-<div class="bs-example widget-shadow" style="padding:15px" id="listar">
+<div class="dropdown" style="display: inline-block;">                      
+                        <a href="#" aria-expanded="false" aria-haspopup="true" data-bs-toggle="dropdown" class="btn btn-danger dropdown" id="btn-deletar" style="display:none"><i class="fe fe-trash-2"></i> Deletar</a>
+                        <div  class="dropdown-menu tx-13">
+                        <div style="width: 240px; padding:15px 5px 0 10px;" class="dropdown-item-text">
+                        <p>Excluir Selecionados? <a href="#" onclick="deletarSel()"><span class="text-danger">Sim</span></a></p>
+                        </div>
+                        </div>
+                        </div>
 
 </div>
 
+</div>
+
+
+<div class="row row-sm">
+<div class="col-lg-12">
+<div class="card custom-card">
+<div class="card-body" id="listar">
+
+</div>
+</div>
+</div>
 </div>
 
 <input type="hidden" id="ids">
 
-<!-- Modal Perfil -->
 <div class="modal fade" id="modalForm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
+	<div class="modal-dialog ">
 		<div class="modal-content">
-			<div class="modal-header">
+			<div class="modal-header bg-primary text-white">
 				<h4 class="modal-title" id="exampleModalLabel"><span id="titulo_inserir"></span></h4>
-				<button id="btn-fechar" type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -25px">
-					<span aria-hidden="true">&times;</span>
-				</button>
+				 <button id="btn-fechar" aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"><span class="text-white" aria-hidden="true">&times;</span></button>
 			</div>
 			<form id="form">
 			<div class="modal-body">
 				
+				
 
 					<div class="row">
-						<div class="col-md-6">							
+						<div class="col-md-8 mb-2">							
 								<label>Nome</label>
 								<input type="text" class="form-control" id="nome" name="nome" placeholder="Nome do Grupo" required>							
 						</div>
 
-						<div class="col-md-6" style="margin-top: 22px">							
+						<div class="col-md-4 mb-2" style="margin-top: 22px">							
 								<button id="btn_salvar" type="submit" class="btn btn-primary">Salvar</button>					
 						</div>
 

@@ -1,8 +1,9 @@
-$(document).ready(function() {    
+$(document).ready(function() { 
+    $('#listar').text("Carregando Dados...");   
     listar();    
 } );
 
-function listar(p1, p2, p3, p4, p5, p6){	
+function listar(p1, p2, p3, p4, p5, p6){
     $.ajax({
         url: 'paginas/' + pag + "/listar.php",
         method: 'POST',
@@ -16,15 +17,12 @@ function listar(p1, p2, p3, p4, p5, p6){
     });
 }
 
-
-
-function inserir(){   
+function inserir(){    
     $('#mensagem').text('');
     $('#titulo_inserir').text('Inserir Registro');
     $('#modalForm').modal('show');
     limparCampos();
 }
-
 
 
 
@@ -74,7 +72,7 @@ $("#form").submit(function () {
 
 
 
-function excluir(id){	
+function excluir(id){   
     $('#mensagem-excluir').text('Excluindo...')
     
     $.ajax({
@@ -84,8 +82,9 @@ function excluir(id){
         dataType: "html",
 
         success:function(mensagem){
-            if (mensagem.trim() == "Excluído com Sucesso") {            	
+            if (mensagem.trim() == "Excluído com Sucesso") {                
                 listar();
+                limparCampos()
             } else {
                 $('#mensagem-excluir').addClass('text-danger')
                 $('#mensagem-excluir').text(mensagem)
@@ -97,8 +96,30 @@ function excluir(id){
 
 
 
+function excluirMultiplos(id){   
+    $('#mensagem-excluir').text('Excluindo...')
+    
+    $.ajax({
+        url: 'paginas/' + pag + "/excluir.php",
+        method: 'POST',
+        data: {id},
+        dataType: "html",
 
-function ativar(id, acao){	
+        success:function(mensagem){
+            if (mensagem.trim() == "Excluído com Sucesso") {                
+                //listar();
+                limparCampos()
+            } else {
+                $('#mensagem-excluir').addClass('text-danger')
+                $('#mensagem-excluir').text(mensagem)
+            }
+        }
+    });
+}
+
+
+
+function ativar(id, acao){  
     $.ajax({
         url: 'paginas/' + pag + "/mudar-status.php",
         method: 'POST',
@@ -115,4 +136,3 @@ function ativar(id, acao){
         }
     });
 }
-

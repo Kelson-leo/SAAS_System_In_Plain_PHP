@@ -6,7 +6,7 @@ date_default_timezone_set('America/Sao_Paulo');
 $url_sistema = "http://$_SERVER[HTTP_HOST]/";
 $url = explode("//", $url_sistema);
 if($url[1] == 'localhost/'){
-	$url_sistema = "http://$_SERVER[HTTP_HOST]/projeto_rel/";
+	$url_sistema = "http://$_SERVER[HTTP_HOST]/projeto_painel/";
 }
 
 //dados conexão bd local
@@ -49,6 +49,9 @@ $marca_dagua = $res[0]['marca_dagua'];
 $assinatura_recibo = $res[0]['assinatura_recibo'];
 $impressao_automatica = $res[0]['impressao_automatica'];
 $cnpj_sistema = $res[0]['cnpj'];
+$entrar_automatico = $res[0]['entrar_automatico'];
+$mostrar_preloader = $res[0]['mostrar_preloader'];
+$ocultar_mobile = $res[0]['ocultar_mobile'];
 
 $tel_whats = '55'.preg_replace('/[ ()-]+/' , '' , $telefone_sistema);
 

@@ -13,6 +13,9 @@ $marca_dagua = $_POST['marca_dagua'];
 $assinatura_recibo = $_POST['assinatura_recibo'];
 $impressao_automatica = $_POST['impressao_automatica'];
 $cnpj_sistema = $_POST['cnpj_sistema'];
+$entrar_automatico = $_POST['entrar_automatico'];
+$mostrar_preloader = $_POST['mostrar_preloader'];
+$ocultar_mobile = $_POST['ocultar_mobile'];
 
 $multa_atraso = str_replace(',', '.', $multa_atraso);
 $multa_atraso = str_replace('%', '', $multa_atraso);
@@ -84,7 +87,23 @@ if(@$_FILES['assinatura_rel']['name'] != ""){
 }
 
 
-$query = $pdo->prepare("UPDATE $tabela SET nome = :nome, email = :email, telefone = :telefone, endereco = :endereco, instagram = :instagram, multa_atraso = :multa_atraso, juros_atraso = :juros_atraso, marca_dagua = :marca_dagua, marca_dagua = :marca_dagua, assinatura_recibo = :assinatura_recibo, impressao_automatica = :impressao_automatica, cnpj = :cnpj_sistema where id = 1");
+//foto painel
+$caminho = '../img/foto-painel.png';
+$imagem_temp = @$_FILES['foto-painel']['tmp_name']; 
+
+if(@$_FILES['foto-painel']['name'] != ""){
+	$ext = pathinfo(@$_FILES['foto-painel']['name'], PATHINFO_EXTENSION);   
+	if($ext == 'png' || $ext == 'PNG'){ 	
+			
+		move_uploaded_file($imagem_temp, $caminho);
+	}else{
+		echo 'Extensão de Imagem não permitida!';
+		exit();
+	}
+}
+
+
+$query = $pdo->prepare("UPDATE $tabela SET nome = :nome, email = :email, telefone = :telefone, endereco = :endereco, instagram = :instagram, multa_atraso = :multa_atraso, juros_atraso = :juros_atraso, marca_dagua = :marca_dagua, marca_dagua = :marca_dagua, assinatura_recibo = :assinatura_recibo, impressao_automatica = :impressao_automatica, cnpj = :cnpj_sistema, entrar_automatico = :entrar_automatico, mostrar_preloader = :mostrar_preloader, ocultar_mobile = :ocultar_mobile where id = 1");
 
 $query->bindValue(":nome", "$nome");
 $query->bindValue(":email", "$email");
@@ -97,6 +116,9 @@ $query->bindValue(":marca_dagua", "$marca_dagua");
 $query->bindValue(":assinatura_recibo", "$assinatura_recibo");
 $query->bindValue(":impressao_automatica", "$impressao_automatica");
 $query->bindValue(":cnpj_sistema", "$cnpj_sistema");
+$query->bindValue(":entrar_automatico", "$entrar_automatico");
+$query->bindValue(":mostrar_preloader", "$mostrar_preloader");
+$query->bindValue(":ocultar_mobile", "$ocultar_mobile");
 $query->execute();
 
 echo 'Editado com Sucesso';

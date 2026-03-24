@@ -7,10 +7,11 @@ $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $linhas = @count($res);
 if($linhas > 0){
 echo <<<HTML
-<small>
-	<table class="table table-hover" id="tabela">
+
+	<table class="table table-bordered text-nowrap border-bottom dt-responsive" id="tabela">
 	<thead> 
 	<tr> 
+	<th align="center" width="5%" class="text-center">Selecionar</th>
 	<th>Frequência</th>	
 	<th>Dias</th>		
 	<th>Ações</th>
@@ -29,25 +30,25 @@ for($i=0; $i<$linhas; $i++){
 	
 echo <<<HTML
 <tr >
-<td>
-<input type="checkbox" id="seletor-{$id}" class="form-check-input" onchange="selecionar('{$id}')">
-{$frequencia}
+<td align="center">
+<div class="custom-checkbox custom-control">
+<input type="checkbox" class="custom-control-input" id="seletor-{$id}" onchange="selecionar('{$id}')">
+<label for="seletor-{$id}" class="custom-control-label mt-1 text-dark"></label>
+</div>
 </td>
+<td>{$frequencia}</td>
 <td>{$dias}</td>
 <td>
-	<big><a href="#" onclick="editar('{$id}','{$frequencia}','{$dias}')" title="Editar Dados"><i class="fa fa-edit text-primary"></i></a></big>
+	<big><a class="btn btn-info btn-sm" href="#" onclick="editar('{$id}','{$frequencia}','{$dias}')" title="Editar Dados"><i class="fa fa-edit "></i></a></big>
 
-	<li class="dropdown head-dpdn2" style="display: inline-block;">
-		<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><big><i class="fa fa-trash-o text-danger"></i></big></a>
-
-		<ul class="dropdown-menu" style="margin-left:-230px;">
-		<li>
-		<div class="notification_desc2">
-		<p>Confirmar Exclusão? <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
-		</div>
-		</li>										
-		</ul>
-</li>
+	<div class="dropdown" style="display: inline-block;">                      
+                        <a class="btn btn-danger btn-sm" href="#" aria-expanded="false" aria-haspopup="true" data-bs-toggle="dropdown" class="dropdown"><i class="fa fa-trash"></i> </a>
+                        <div  class="dropdown-menu tx-13">
+                        <div class="dropdown-item-text botao_excluir">
+                        <p>Confirmar Exclusão? <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
+                        </div>
+                        </div>
+                        </div>
 
 
 </td>

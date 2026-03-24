@@ -8,10 +8,11 @@ $total_reg = @count($res);
 if($total_reg > 0){
 
 echo <<<HTML
-	<small>
-	<table class="table table-hover" id="tabela">
+	
+	<table class="table table-bordered text-nowrap border-bottom dt-responsive" id="tabela">
 	<thead> 
 	<tr> 
+	<th align="center" width="5%" class="text-center">Selecionar</th>
 	<th>Nome</th>		
 	<th>Taxa</th>		
 	<th>Ações</th>
@@ -32,25 +33,25 @@ for($i=0; $i < $total_reg; $i++){
 	
 echo <<<HTML
 <tr class="">
-<td>
-<input type="checkbox" id="seletor-{$id}" class="form-check-input" onchange="selecionar('{$id}')">
-{$nome}</td>
+<td align="center">
+<div class="custom-checkbox custom-control">
+<input type="checkbox" class="custom-control-input" id="seletor-{$id}" onchange="selecionar('{$id}')">
+<label for="seletor-{$id}" class="custom-control-label mt-1 text-dark"></label>
+</div>
+</td>
+<td>{$nome}</td>
 <td>{$taxa}%</td>
 <td>
-		<big><a href="#" onclick="editar('{$id}','{$nome}','{$taxa}')" title="Editar Dados"><i class="fa fa-edit text-primary"></i></a></big>
+		<big><a class="btn btn-info btn-sm" href="#" onclick="editar('{$id}','{$nome}','{$taxa}')" title="Editar Dados"><i class="fa fa-edit "></i></a></big>
 
-		
-		<li class="dropdown head-dpdn2" style="display: inline-block;">
-		<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><big><i class="fa fa-trash-o text-danger"></i></big></a>
-
-		<ul class="dropdown-menu" style="margin-left:-230px;">
-		<li>
-		<div class="notification_desc2">
-		<p>Confirmar Exclusão? <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
-		</div>
-		</li>										
-		</ul>
-		</li>
+		<div class="dropdown" style="display: inline-block;">                      
+                        <a class="btn btn-danger btn-sm" href="#" aria-expanded="false" aria-haspopup="true" data-bs-toggle="dropdown" class="dropdown"><i class="fa fa-trash"></i> </a>
+                        <div  class="dropdown-menu tx-13">
+                         <div class="dropdown-item-text botao_excluir">
+                        <p>Confirmar Exclusão? <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
+                        </div>
+                        </div>
+                        </div>
 
 
 		</td>
@@ -63,12 +64,12 @@ echo <<<HTML
 </tbody>
 <small><div align="center" id="mensagem-excluir"></div></small>
 </table>
-</small>
+
 HTML;
 
 
 }else{
-	echo '<small>Não possui nenhum registro Cadastrado!</small>';
+	echo 'Não possui nenhum registro Cadastrado!';
 }
 
 ?>
@@ -125,8 +126,12 @@ HTML;
 		var id = ids.split("-");
 		
 		for(i=0; i<id.length-1; i++){
-			excluir(id[i]);			
+			excluirMultiplos(id[i]);			
 		}
+
+		setTimeout(() => {
+		  	listar();	
+		}, 1000);
 
 		limparCampos();
 	}

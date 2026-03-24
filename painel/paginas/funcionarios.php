@@ -8,53 +8,57 @@ if(@$funcionarios == 'ocultar'){
 }
  ?>
 
-<div class="main-page margin-mobile">
-<a onclick="inserir()" type="button" class="btn btn-primary"><span class="fa fa-plus"></span> Funcionário</a>
+<div class="justify-content-between">
+ 	<div class="left-content mt-2 mb-3">
+ <a class="btn ripple btn-primary text-white" onclick="inserir()" type="button"><i class="fe fe-plus me-2"></i> Adicionar <?php echo ucfirst($pag); ?></a>
 
 
 
-<li class="dropdown head-dpdn2" style="display: inline-block;">		
-		<a href="#" data-toggle="dropdown"  class="btn btn-danger dropdown-toggle" id="btn-deletar" style="display:none"><span class="fa fa-trash-o"></span> Deletar</a>
-
-		<ul class="dropdown-menu">
-		<li>
-		<div class="notification_desc2">
-		<p>Excluir Selecionados? <a href="#" onclick="deletarSel()"><span class="text-danger">Sim</span></a></p>
-		</div>
-		</li>										
-		</ul>
-</li>
+<div class="dropdown" style="display: inline-block;">                      
+                        <a href="#" aria-expanded="false" aria-haspopup="true" data-bs-toggle="dropdown" class="btn btn-danger dropdown" id="btn-deletar" style="display:none"><i class="fe fe-trash-2"></i> Deletar</a>
+                        <div  class="dropdown-menu tx-13">
+                        <div style="width: 240px; padding:15px 5px 0 10px;" class="dropdown-item-text">
+                        <p>Excluir Selecionados? <a href="#" onclick="deletarSel()"><span class="text-danger">Sim</span></a></p>
+                        </div>
+                        </div>
+                        </div>
 
 </div>
 
-<div class="bs-example widget-shadow" style="padding:15px" id="listar">
+</div>
 
+
+<div class="row row-sm">
+<div class="col-lg-12">
+<div class="card custom-card">
+<div class="card-body" id="listar">
+
+</div>
+</div>
+</div>
 </div>
 
 
 <input type="hidden" id="ids">
 
-<!-- Modal Perfil -->
 <div class="modal fade" id="modalForm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
+	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
-			<div class="modal-header">
+			<div class="modal-header bg-primary text-white">
 				<h4 class="modal-title" id="exampleModalLabel"><span id="titulo_inserir"></span></h4>
-				<button id="btn-fechar" type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -25px">
-					<span aria-hidden="true">&times;</span>
-				</button>
+				 <button id="btn-fechar" aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"><span class="text-white" aria-hidden="true">&times;</span></button>
 			</div>
 			<form id="form">
 			<div class="modal-body">
 				
 
 					<div class="row">
-						<div class="col-md-6">							
+						<div class="col-md-6 mb-2">							
 								<label>Nome</label>
 								<input type="text" class="form-control" id="nome" name="nome" placeholder="Seu Nome" required>							
 						</div>
 
-						<div class="col-md-6">							
+						<div class="col-md-6 mb-2">							
 								<label>Email</label>
 								<input type="email" class="form-control" id="email" name="email" placeholder="Seu Email"  required>							
 						</div>
@@ -65,15 +69,15 @@ if(@$funcionarios == 'ocultar'){
 
 					<div class="row">
 
-						<div class="col-md-4">							
+						<div class="col-md-4 mb-2 col-6">							
 								<label>Telefone</label>
 								<input type="text" class="form-control" id="telefone" name="telefone" placeholder="Seu Telefone" required>							
 						</div>
 						
 
-						<div class="col-md-4">							
+						<div class="col-md-4 mb-2 col-6">							
 								<label>Cargo</label>
-								<select class="form-control" name="nivel" id="nivel">
+								<select class="form-select" name="nivel" id="nivel">
 								  <?php 
 								  	$query = $pdo->query("SELECT * from cargos where nome != 'Administrador' order by id asc");
 									$res = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -85,7 +89,7 @@ if(@$funcionarios == 'ocultar'){
 								</select>							
 						</div>
 
-							<div class="col-md-4">							
+							<div class="col-md-4 mb-2 ">							
 								<label>Chave Pix</label>
 								<input type="text" class="form-control" id="chave_pix" name="chave_pix" placeholder="Chave Pix" >							
 						</div>
@@ -96,7 +100,7 @@ if(@$funcionarios == 'ocultar'){
 
 					<div class="row">
 
-						<div class="col-md-9">							
+						<div class="col-md-12">							
 								<label>Endereço</label>
 								<input type="text" class="form-control" id="endereco" name="endereco" placeholder="Seu Endereço" >							
 						</div>
@@ -127,61 +131,97 @@ if(@$funcionarios == 'ocultar'){
 
 
 
-<!-- Modal Dados -->
-<div class="modal fade" id="modalDados" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title" id="exampleModalLabel"><span id="titulo_dados"></span></h4>
-				<button id="btn-fechar-dados" type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -25px">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			
-			<div class="modal-body">
-				<div class="row" style="margin-top: 0px">
-					<div class="col-md-6" style="margin-bottom: 5px">
-						<span><b>Telefone: </b></span><span id="telefone_dados"></span>
-					</div>
 
-					
-					<div class="col-md-8" style="margin-bottom: 5px">
-						<span><b>Email: </b></span><span id="email_dados"></span>
-					</div>
-
-					
-
-					<div class="col-md-6" style="margin-bottom: 5px">
-						<span><b>Nível: </b></span><span id="nivel_dados"></span>
-					</div>
-
-					<div class="col-md-6" style="margin-bottom: 5px">
-						<span><b>Ativo: </b></span><span id="ativo_dados"></span>
-					</div>
-
-					<div class="col-md-6" style="margin-bottom: 5px">
-						<span><b>Data Cadastro: </b></span><span id="data_dados"></span>
-					</div>
-
-					
-
-					<div class="col-md-6" style="margin-bottom: 5px">
-						<span><b>Chave Pix: </b></span><span id="pix_dados"></span>
-					</div>
-
-					<div class="col-md-12" style="margin-bottom: 5px">
-						<span><b>Endereço: </b></span><span id="endereco_dados"></span>
-					</div>
-
-					<div class="col-md-12" style="margin-bottom: 5px">
-						<div align="center"><img src="" id="foto_dados" width="200px"></div>
-					</div>
+	<!-- Modal Dados -->
+	<div class="modal fade" id="modalDados" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header bg-primary text-white">
+					<h4 class="modal-title" id="exampleModalLabel"><span id="titulo_dados"></span></h4>
+					<button id="btn-fechar-dados" aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"><span class="text-white" aria-hidden="true">&times;</span></button>
 				</div>
+
+				<div class="modal-body">
+
+
+					<div class="row">
+
+
+						<div class="col-md-6">
+							<div class="tile">
+								<div class="table-responsive">
+									<table id="" class="text-left table table-bordered">
+										<tr>
+											<td class="bg-warning alert-warning">Telefone</td>
+											<td><span id="telefone_dados"></span></td>
+										</tr>
+
+										<tr>
+											<td class="bg-warning alert-warning">Email</td>
+											<td><span id="email_dados"></span></td>
+										</tr>
+
+										<tr>
+											<td class="bg-warning alert-warning w_150">Cargo</td>
+											<td><span id="nivel_dados"></span></td>
+										</tr>
+
+										<tr>
+											<td class="bg-warning alert-warning w_150">Ativo</td>
+											<td><span id="ativo_dados"></span></td>
+										</tr>
+
+										<tr>
+											<td class="bg-warning alert-warning w_150">Data Cadastro</td>
+											<td><span id="data_dados"></span></td>
+										</tr>
+
+										<tr>
+											<td class="bg-warning alert-warning w_150">Chave Pix</td>
+											<td><span id="pix_dados"></span></td>
+										</tr>
+
+										<tr>
+											<td class="bg-warning alert-warning w_150">Endereço</td>
+											<td><span id="endereco_dados"></span></td>
+										</tr>
+
+
+										 
+
+									</table>
+								</div>
+							</div>
+						</div>
+
+
+
+						<div class="col-md-6">
+							<div class="tile">
+								<div class="table-responsive">
+									<table id="" class="text-left table table-bordered">
+									
+									<tr>
+											<td align="center"><img src="" id="foto_dados" width="200px"></td>
+										</tr>      
+										
+									</table>
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+
+
+
+
+				</div>
+
 			</div>
-					
 		</div>
 	</div>
-</div>
+
 
 
 
@@ -190,11 +230,9 @@ if(@$funcionarios == 'ocultar'){
 	<div class="modal fade" id="modalArquivos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<div class="modal-header">
+				<div class="modal-header bg-primary text-white">
 					<h4 class="modal-title" id="tituloModal">Gestão de Arquivos - <span id="nome-arquivo"> </span></h4>
-					<button id="btn-fechar-arquivos" type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -20px">
-						<span aria-hidden="true">&times;</span>
-					</button>
+					 <button id="btn-fechar-arquivos" aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"><span class="text-white" aria-hidden="true">&times;</span></button>
 				</div>
 				<form id="form-arquivos" method="post">
 					<div class="modal-body">
@@ -206,7 +244,7 @@ if(@$funcionarios == 'ocultar'){
 									<input class="form-control" type="file" name="arquivo_conta" onChange="carregarImgArquivos();" id="arquivo_conta">
 								</div>	
 							</div>
-							<div class="col-md-4" style="margin-top:-10px">	
+							<div class="col-md-4">	
 								<div id="divImgArquivos">
 									<img src="images/arquivos/sem-foto.png"  width="60px" id="target-arquivos">									
 								</div>					
@@ -217,7 +255,7 @@ if(@$funcionarios == 'ocultar'){
 
 						</div>
 
-						<div class="row" style="margin-top:-40px">
+						<div class="row" >
 							<div class="col-md-8">
 								<input type="text" class="form-control" name="nome-arq"  id="nome-arq" placeholder="Nome do Arquivo * " required>
 							</div>
@@ -241,6 +279,12 @@ if(@$funcionarios == 'ocultar'){
 				</form>
 			</div>
 		</div>
+	</div>
+
+
+
+
+
 
 
 

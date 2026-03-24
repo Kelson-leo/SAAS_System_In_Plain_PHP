@@ -7,16 +7,17 @@ $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $linhas = @count($res);
 if($linhas > 0){
 echo <<<HTML
-<small>
-	<table class="table table-hover" id="tabela">
+
+	<table class="table table-bordered text-nowrap border-bottom dt-responsive" id="tabela">
 	<thead> 
 	<tr> 
+	<th align="center" width="5%" class="text-center">Selecionar</th>
 	<th>Nome</th>	
-	<th class="esc">Telefone</th>	
-	<th class="esc">Email</th>			
-	<th class="esc">CPF / CNPJ</th>
-	<th class="esc">Tipo Pessoa</th>
-	<th class="esc">Data Cadastro</th>	
+	<th >Telefone</th>	
+	<th >Email</th>			
+	<th >CPF / CNPJ</th>
+	<th >Tipo Pessoa</th>
+	<th >Data Cadastro</th>	
 	<th>Ações</th>
 	</tr> 
 	</thead> 
@@ -44,38 +45,38 @@ for($i=0; $i<$linhas; $i++){
 
 echo <<<HTML
 <tr>
-<td>
-<input type="checkbox" id="seletor-{$id}" class="form-check-input" onchange="selecionar('{$id}')">
-{$nome}
+<td align="center">
+<div class="custom-checkbox custom-control">
+<input type="checkbox" class="custom-control-input" id="seletor-{$id}" onchange="selecionar('{$id}')">
+<label for="seletor-{$id}" class="custom-control-label mt-1 text-dark"></label>
+</div>
 </td>
-<td class="esc">{$telefone}</td>
-<td class="esc">{$email}</td>
-<td class="esc">{$cpf}</td>
-<td class="esc">{$tipo_pessoa}</td>
-<td class="esc">{$data_cadF}</td>
+<td>{$nome}</td>
+<td>{$telefone}</td>
+<td>{$email}</td>
+<td>{$cpf}</td>
+<td><span class="badge bg-primary me-1 my-2 p-1"><big>{$tipo_pessoa}</big></span></td>
+<td>{$data_cadF}</td>
 <td>
-	<big><a href="#" onclick="editar('{$id}','{$nome}','{$email}','{$telefone}','{$endereco}','{$cpf}','{$tipo_pessoa}','{$data_nasc}')" title="Editar Dados"><i class="fa fa-edit text-primary"></i></a></big>
+	<a class="icones_mobile" href="#" onclick="editar('{$id}','{$nome}','{$email}','{$telefone}','{$endereco}','{$cpf}','{$tipo_pessoa}','{$data_nasc}')" title="Editar Dados"><i class="fa fa-edit text-primary"></i></a>
 
-	<li class="dropdown head-dpdn2" style="display: inline-block;">
-		<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><big><i class="fa fa-trash-o text-danger"></i></big></a>
+	<div class="dropdown" style="display: inline-block;">                      
+                        <a class="icones_mobile" href="#" aria-expanded="false" aria-haspopup="true" data-bs-toggle="dropdown" class="dropdown"><i class="fa fa-trash text-danger"></i> </a>
+                        <div  class="dropdown-menu tx-13">
+                        <div class="dropdown-item-text botao_excluir">
+                        <p>Confirmar Exclusão? <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
+                        </div>
+                        </div>
+                        </div>
 
-		<ul class="dropdown-menu" style="margin-left:-230px;">
-		<li>
-		<div class="notification_desc2">
-		<p>Confirmar Exclusão? <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
-		</div>
-		</li>										
-		</ul>
-</li>
-
-<big><a href="#" onclick="mostrar('{$nome}','{$email}','{$telefone}','{$endereco}', '{$data_cadF}','{$cpf}','{$tipo_pessoa}','{$data_nascF}')" title="Mostrar Dados"><i class="fa fa-info-circle text-primary"></i></a></big>
+<a class="icones_mobile" href="#" onclick="mostrar('{$nome}','{$email}','{$telefone}','{$endereco}', '{$data_cadF}','{$cpf}','{$tipo_pessoa}','{$data_nascF}')" title="Mostrar Dados"><i class="fa fa-info-circle text-primary"></i></a>
 
 
-	<big><a href="#" onclick="arquivo('{$id}', '{$nome}')" title="Inserir / Ver Arquivos"><i class="fa fa-file-o " style="color:#22146e"></i></a></big>
+<a class="icones_mobile" href="#" onclick="arquivo('{$id}', '{$nome}')" title="Inserir / Ver Arquivos"><i class="fa fa-file-o " style="color:#22146e"></i></a>
 
-<big><a href="#" onclick="mostrarContas('{$nome}','{$id}')" title="Mostrar Contas"><i class="fa fa-money text-verde"></i></a></big>
+<a class="icones_mobile" href="#" onclick="mostrarContas('{$nome}','{$id}')" title="Mostrar Contas"><i class="fa fa-money text-verde"></i></a>
 
-<big><a class="" href="http://api.whatsapp.com/send?1=pt_BR&phone={$tel_whatsF}" title="Whatsapp" target="_blank"><i class="fa fa-whatsapp " style="color:green"></i></a></big>
+<a class="icones_mobile" class="" href="http://api.whatsapp.com/send?1=pt_BR&phone={$tel_whatsF}" title="Whatsapp" target="_blank"><i class="fa fa-whatsapp " style="color:green"></i></a>
 
 
 </td>
@@ -85,7 +86,7 @@ HTML;
 }
 
 }else{
-	echo '<small>Não possui nenhum cadastro!</small>';
+	echo 'Não possui nenhum cadastro!';
 }
 
 
@@ -181,8 +182,12 @@ HTML;
 		var id = ids.split("-");
 		
 		for(i=0; i<id.length-1; i++){
-			excluir(id[i]);			
+			excluirMultiplos(id[i]);			
 		}
+
+		setTimeout(() => {
+		  	listar();	
+		}, 1000);
 
 		limparCampos();
 	}
