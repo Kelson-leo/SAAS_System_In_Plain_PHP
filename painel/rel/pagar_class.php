@@ -1,5 +1,11 @@
 <?php 
+@session_start();
+$mostrar_registros = @$_SESSION['registros'];
+$id_usuario = @$_SESSION['id'];
+
 require_once("../../conexao.php");
+
+
 
 $dataInicial = $_POST['dataInicial'];
 $dataFinal = $_POST['dataFinal'];
@@ -7,7 +13,7 @@ $pago = $_POST['pago'];
 $tipo_data = $_POST['tipo_data'];
 
 
-$html = file_get_contents($url_sistema."painel/rel/pagar.php?dataInicial=$dataInicial&dataFinal=$dataFinal&pago=$pago&tipo_data=$tipo_data");
+$html = file_get_contents($url_sistema."painel/rel/pagar.php?dataInicial=$dataInicial&dataFinal=$dataFinal&pago=$pago&tipo_data=$tipo_data&mostrar_registros=$mostrar_registros&id_usuario=$id_usuario");
 
 //CARREGAR DOMPDF
 require_once '../dompdf/autoload.inc.php';

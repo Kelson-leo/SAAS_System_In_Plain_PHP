@@ -1,4 +1,8 @@
 <?php 
+@session_start();
+$mostrar_registros = @$_SESSION['registros'];
+$id_usuario = @$_SESSION['id'];
+
 require_once("../../conexao.php");
 require_once("data_formatada.php");
 
@@ -6,6 +10,9 @@ $dataInicial = $_GET['dataInicial'];
 $dataFinal = $_GET['dataFinal'];
 $pago = $_GET['pago'];
 $tipo_data = $_GET['tipo_data'];
+
+$mostrar_registros = $_GET['mostrar_registros'];
+$id_usuario = $_GET['id_usuario'];
 
 $dataInicialF = implode('/', array_reverse(@explode('-', $dataInicial)));
 $dataFinalF = implode('/', array_reverse(@explode('-', $dataFinal)));
@@ -155,12 +162,19 @@ $total_pagasF = 0;
 $pendentes = 0;
 $pagas = 0;
 
-if($pago == 'Vencidas'){
-	$query = $pdo->query("SELECT * from pagar where vencimento < curDate() and pago != 'Sim' order by id desc");
+if($mostrar_registros == 'Não'){
+	if($pago == 'Vencidas'){
+		$query = $pdo->query("SELECT * from pagar where vencimento < curDate() and pago != 'Sim' and usuario_lanc = '$id_usuario' order by id desc");
+	}else{
+	$query = $pdo->query("SELECT * from pagar where $tipo_data >= '$dataInicial' and $tipo_data <= '$dataFinal' and pago LIKE '%$pago%' and usuario_lanc = '$id_usuario' order by id desc");
+	}
 }else{
-$query = $pdo->query("SELECT * from pagar where $tipo_data >= '$dataInicial' and $tipo_data <= '$dataFinal' and pago LIKE '%$pago%' order by id desc");
+	if($pago == 'Vencidas'){
+		$query = $pdo->query("SELECT * from pagar where vencimento < curDate() and pago != 'Sim' order by id desc");
+	}else{
+	$query = $pdo->query("SELECT * from pagar where $tipo_data >= '$dataInicial' and $tipo_data <= '$dataFinal' and pago LIKE '%$pago%' order by id desc");
+	}
 }
-
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $linhas = @count($res);
 if($linhas > 0){

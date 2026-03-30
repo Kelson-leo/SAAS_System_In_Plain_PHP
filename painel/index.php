@@ -3,6 +3,7 @@
 require_once("../conexao.php");
 require_once("verificar.php");
 
+
 $data_atual = date('Y-m-d');
 $mes_atual = Date('m');
 $ano_atual = Date('Y');
@@ -52,11 +53,21 @@ if($linhas > 0){
 	$nivel_usuario = $res[0]['nivel'];
 	$foto_usuario = $res[0]['foto'];
 	$endereco_usuario = $res[0]['endereco'];
+	$mostrar_registros = $res[0]['mostrar_registros'];
 }else{
 	echo '<script>window.location="../"</script>';
 	exit();
 }
 
+
+//verificar caixa aberto
+$query1 = $pdo->query("SELECT * from caixas where operador = '$id_usuario' and data_fechamento is null order by id desc limit 1");
+$res1 = $query1->fetchAll(PDO::FETCH_ASSOC);
+if(@count($res1) > 0){
+	$texto_caixa = '<small><span style="color:green"> (Aberto)</span></small>';
+}else{
+	$texto_caixa = '<small><span style="color:red"> (Fechado)</span></small>';
+}
 
 
 ?>
@@ -154,12 +165,16 @@ if($linhas > 0){
 
 
 												<?php 
+					if($mostrar_registros == 'Não'){
+					$query = $pdo->query("SELECT * from receber where vencimento < curDate() and pago != 'Sim' and usuario_lanc = '$id_usuario' order by id asc");
+				}else{
 					$query = $pdo->query("SELECT * from receber where vencimento < curDate() and pago != 'Sim' order by id asc");
+				}
 					$res = $query->fetchAll(PDO::FETCH_ASSOC);
 					$linhas = @count($res);
 				 ?>
 
-											<li class="dropdown nav-item  main-header-message ">
+											<li class="dropdown nav-item  main-header-message <?php echo $receber ?>">
 												<a class="new nav-link"  data-bs-toggle="dropdown" href="javascript:void(0);">
 													<small><i class="fa fa-dollar" style="color:#d4fae1;"></i></small>
 													<span class="badge  header-badge" style="background:green"><?php echo $linhas ?></span>
@@ -178,7 +193,11 @@ if($linhas > 0){
 													<div class="main-message-list chat-scroll">
 
 														<?php 
-									$query = $pdo->query("SELECT * from receber where vencimento < curDate() and pago != 'Sim' order by id asc");
+														if($mostrar_registros == 'Não'){
+									$query = $pdo->query("SELECT * from receber where vencimento < curDate() and pago != 'Sim' and usuario_lanc = '$id_usuario' order by id asc");
+									}else{
+										$query = $pdo->query("SELECT * from receber where vencimento < curDate() and pago != 'Sim' order by id asc");
+									}
 									$res = $query->fetchAll(PDO::FETCH_ASSOC);
 									$linhas = @count($res);
 									for($i=0; $i<$linhas; $i++){
@@ -213,12 +232,16 @@ if($linhas > 0){
 
 
 											<?php 
+					if($mostrar_registros == 'Não'){
+					$query = $pdo->query("SELECT * from pagar where vencimento < curDate() and pago != 'Sim' and usuario_lanc = '$id_usuario' order by id asc");
+				}else{
 					$query = $pdo->query("SELECT * from pagar where vencimento < curDate() and pago != 'Sim' order by id asc");
+				}
 					$res = $query->fetchAll(PDO::FETCH_ASSOC);
 					$linhas = @count($res);
 				 ?>
 
-											<li class="dropdown nav-item  main-header-message ">
+											<li class="dropdown nav-item  main-header-message <?php echo $pagar ?>">
 												<a class="new nav-link"  data-bs-toggle="dropdown" href="javascript:void(0);">
 													<small><i class="fa fa-dollar" style="color:#fff3f2;"></i></small>
 													<span class="badge  header-badge" style="background:red"><?php echo $linhas ?></span>
@@ -238,7 +261,11 @@ if($linhas > 0){
 														<div class="main-message-list Notification-scroll">
 
 															<?php 
+															if($mostrar_registros == 'Não'){
+									$query = $pdo->query("SELECT * from pagar where vencimento < curDate() and pago != 'Sim' and usuario_lanc = '$id_usuario' order by id asc");
+								}else{
 									$query = $pdo->query("SELECT * from pagar where vencimento < curDate() and pago != 'Sim' order by id asc");
+								}
 									$res = $query->fetchAll(PDO::FETCH_ASSOC);
 									$linhas = @count($res);
 									for($i=0; $i<$linhas; $i++){
@@ -383,6 +410,15 @@ if($linhas > 0){
 										
 									</ul>
 								</li>
+
+
+
+								
+									<li class="slide <?php echo @$caixas ?>">
+									<a class="side-menu__item" href="caixas">
+										<i class="fa fa-briefcase text-white"></i>
+										<span class="side-menu__label" style="margin-left: 15px">Caixas  <?php echo $texto_caixa ?></span></a>
+								</li>
 		
 						
 							
@@ -415,6 +451,7 @@ if($ocultar_mobile == 'Sim'){ ?>
 					
 
 				<?php 
+				echo "<script>localStorage.setItem('pagina', '$pagina')</script>";
 				require_once('paginas/'.$pagina.'.php');
 				?>				
 
@@ -707,6 +744,36 @@ if($ocultar_mobile == 'Sim'){ ?>
 					</div>
 
 
+					<div class="row mb-3">
+
+							<div class="col-md-3">							
+								<label>Api Whatsapp <a href="#" onclick="testarApi()" title="Testar disparo Api"><i class="fa fa-whatsapp text-verde"></i></a></label>
+								<select name="api_whatsapp" id="api_whatsapp" class="form-select">
+									<option value="Não" <?php if($api_whatsapp == 'Não'){ ?> selected <?php } ?>>Não</option>
+									<option value="menuia" <?php if($api_whatsapp == 'menuia'){ ?> selected <?php } ?>>Menuia</option>
+									<option value="wm" <?php if($api_whatsapp == 'wm'){ ?> selected <?php } ?>>WordMensagens</option>
+								</select>						
+						</div>
+
+
+						<div class="col-md-4">							
+								<label>Token Whatsapp (appkey)</label>
+								<input type="text" class="form-control" id="token_whatsapp" name="token_whatsapp" placeholder="Token ou App Key" value="<?php echo @$token_whatsapp ?>">							
+						</div>
+
+
+						<div class="col-md-5">							
+								<label>Instância Whatsapp (authKey)</label>
+								<input type="text" class="form-control" id="instancia_whatsapp" name="instancia_whatsapp" placeholder="Instância ou authKey" value="<?php echo @$instancia_whatsapp ?>">							
+						</div>
+
+
+					</div>
+
+
+
+
+
 
 					<div class="row mb-3">
 
@@ -717,6 +784,17 @@ if($ocultar_mobile == 'Sim'){ ?>
 									<option value="Não" <?php if($ocultar_mobile == 'Não'){ ?> selected <?php } ?>>Não</option>
 								</select>						
 						</div>
+
+
+
+						<div class="col-md-3">							
+								<label>Alterar Acessos</label>
+								<select name="alterar_acessos" class="form-select">
+									<option value="Sim" <?php if($alterar_acessos == 'Sim'){ ?> selected <?php } ?>>Sim</option>
+									<option value="Não" <?php if($alterar_acessos == 'Não'){ ?> selected <?php } ?>>Não</option>
+								</select>						
+						</div>
+					
 
 
 
@@ -1267,3 +1345,22 @@ if($ocultar_mobile == 'Sim'){ ?>
 
 
 
+<script type="text/javascript">
+	function testarApi(){
+		var seletor_api = $('#api_whatsapp').val();
+		var token = $('#token_whatsapp').val();
+		var instancia = $('#instancia_whatsapp').val();
+		var telefone_sistema = $('#telefone_sistema').val();
+
+		$.ajax({
+	        url: 'apis/teste_whatsapp.php',
+	        method: 'POST',
+	        data: {seletor_api, token, instancia, telefone_sistema},
+	        dataType: "html",
+
+	        success:function(result){
+	            alert(result)
+	        }
+    	});
+	}
+</script>

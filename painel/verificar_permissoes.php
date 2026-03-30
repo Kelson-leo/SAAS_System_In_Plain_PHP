@@ -5,6 +5,7 @@ $id_usuario = $_SESSION['id'];
 
 $home = 'ocultar';
 $configuracoes = 'ocultar';
+$caixas = 'ocultar';
 
 //grupo pessoas
 $usuarios = 'ocultar';
@@ -26,6 +27,9 @@ $rel_financeiro = 'ocultar';
 $rel_sintetico_despesas = 'ocultar';
 $rel_sintetico_receber = 'ocultar';
 $rel_balanco = 'ocultar';
+
+
+
 
 
 $query = $pdo->query("SELECT * FROM usuarios_permissoes where usuario = '$id_usuario'");
@@ -50,7 +54,11 @@ if($total_reg > 0){
 			$configuracoes = '';
 		}
 
+			if($chave == 'caixas'){
+			$caixas = '';
+		}
 
+	
 		if($chave == 'usuarios'){
 			$usuarios = '';
 		}
@@ -116,6 +124,14 @@ if($total_reg > 0){
 		}
 
 
+
+
+
+	
+
+		
+
+
 	}
 
 }
@@ -146,6 +162,7 @@ if($home != 'ocultar'){
 
 	}else{
 		echo 'Você não tem permissão para acessar nenhuma página, acione o administrador!';
+		echo "<script>localStorage.setItem('id_usu', '')</script>";
 		exit();
 	}
 }
@@ -171,5 +188,8 @@ if($receber == 'ocultar' and $pagar == 'ocultar' and $rel_balanco == 'ocultar' a
 }else{
 	$menu_financeiro = '';
 }
+
+
+
 
 ?>

@@ -2,7 +2,7 @@
 $pag = 'usuarios';
 
 if(@$usuarios == 'ocultar'){
-	echo "<script>window.location='../index.php'</script>";
+	echo "<script>window.location='index'</script>";
 	exit();
 }
 
@@ -69,13 +69,13 @@ if(@$usuarios == 'ocultar'){
 
 					<div class="row">
 
-						<div class="col-md-6 mb-2 col-6">							
+						<div class="col-md-4 mb-2 col-6">							
 							<label>Telefone</label>
 							<input type="text" class="form-control" id="telefone" name="telefone" placeholder="Seu Telefone" required>							
 						</div>
 						
 
-						<div class="col-md-6 mb-2 col-6">							
+						<div class="col-md-4 mb-2 col-6">							
 							<label>Nível</label>
 							<select class="form-select" name="nivel" id="nivel">
 								<?php 
@@ -88,6 +88,16 @@ if(@$usuarios == 'ocultar'){
 									<?php } } ?>
 								</select>								
 							</div>
+
+
+							<div class="col-md-4 mb-2 col-6">							
+							<label>Mostrar todos os Registros</label>
+							<select class="form-select" name="mostrar_registros" id="mostrar_registros">
+								<option value="Sim">Sim</option>
+								<option value="Não">Não</option>
+								</select>								
+							</div>
+
 
 
 

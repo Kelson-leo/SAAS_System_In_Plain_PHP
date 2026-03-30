@@ -1,4 +1,5 @@
 <?php 
+
 include('../../conexao.php');
 include('data_formatada.php');
 
@@ -8,6 +9,9 @@ $dataFinal = $_GET['dataFinal'];
 $filtro_tipo = $_GET['filtro_tipo'];
 $filtro_lancamento = $_GET['filtro_lancamento'];
 $filtro_pendentes = $_GET['filtro_pendentes'];
+
+$mostrar_registros = $_GET['mostrar_registros'];
+$id_usuario = $_GET['id_usuario'];
 
 $dataInicialF = implode('/', array_reverse(@explode('-', $dataInicial)));
 $dataFinalF = implode('/', array_reverse(@explode('-', $dataFinal)));	
@@ -187,7 +191,11 @@ $total_pagasF = 0;
 $pendentes = 0;
 $pagas = 0;
 
-$query = $pdo->query("SELECT * from $filtro_tipo where $filtro_data >= '$dataInicial' and $filtro_data <= '$dataFinal' and pago LIKE '%$filtro_pendentes%' and referencia LIKE '%$filtro_lancamento%' order by $filtro_data asc");
+if($mostrar_registros == 'Não'){
+$query = $pdo->query("SELECT * from $filtro_tipo where $filtro_data >= '$dataInicial' and $filtro_data <= '$dataFinal' and pago LIKE '%$filtro_pendentes%' and referencia LIKE '%$filtro_lancamento%' and usuario_lanc = '$id_usuario' order by $filtro_data asc");
+}else{
+	$query = $pdo->query("SELECT * from $filtro_tipo where $filtro_data >= '$dataInicial' and $filtro_data <= '$dataFinal' and pago LIKE '%$filtro_pendentes%' and referencia LIKE '%$filtro_lancamento%' order by $filtro_data asc");
+}
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $linhas = @count($res);
 if($linhas > 0){

@@ -488,6 +488,7 @@ body.dark-theme {
 .dark-theme .table th,
 .dark-theme .table td {
     border-top: 1px solid #404353;
+    color: #FFF !important;
 }
 
 .dark-theme #global-loader {

@@ -18,6 +18,8 @@ $id = $_POST['id'];
 
 $valor = str_replace(',', '.', $valor);
 
+$valorF = @number_format($valor, 2, ',', '.');
+
 if($fornecedor == ""){
 	$fornecedor = 0;
 }
@@ -138,8 +140,20 @@ if($fornecedor != 0 || $funcionario != 0){
 	
 }
 
+
+//verificar caixa aberto
+$query1 = $pdo->query("SELECT * from caixas where operador = '$id_usuario' and data_fechamento is null order by id desc limit 1");
+$res1 = $query1->fetchAll(PDO::FETCH_ASSOC);
+if(@count($res1) > 0){
+	$id_caixa = @$res1[0]['id'];
+}else{
+	$id_caixa = 0;
+}
+//  
+
 if($id == ""){
-$query = $pdo->prepare("INSERT INTO $tabela SET descricao = :descricao, fornecedor = :fornecedor, funcionario = :funcionario, valor = :valor, vencimento = '$vencimento' $pgto, data_lanc = curDate(), forma_pgto = '$forma_pgto', frequencia = '$frequencia', obs = :obs, arquivo = '$foto', subtotal = :valor, usuario_lanc = '$id_usuario' $usu_pgto, pago = '$pago', referencia = 'Conta' ");
+$query = $pdo->prepare("INSERT INTO $tabela SET descricao = :descricao, fornecedor = :fornecedor, funcionario = :funcionario, valor = :valor, vencimento = '$vencimento' $pgto, data_lanc = curDate(), forma_pgto = '$forma_pgto', frequencia = '$frequencia', obs = :obs, arquivo = '$foto', subtotal = :valor, usuario_lanc = '$id_usuario' $usu_pgto, pago = '$pago', referencia = 'Conta', caixa = '$id_caixa', hora = curTime() ");
+
 	
 }else{
 $query = $pdo->prepare("UPDATE $tabela SET descricao = :descricao, fornecedor = :fornecedor, funcionario = :funcionario, valor = :valor, vencimento = '$vencimento' $pgto, forma_pgto = '$forma_pgto', frequencia = '$frequencia', obs = :obs, arquivo = '$foto', subtotal = :valor where id = '$id'");
@@ -150,6 +164,27 @@ $query->bindValue(":funcionario", "$funcionario");
 $query->bindValue(":valor", "$valor");
 $query->bindValue(":obs", "$obs");
 $query->execute();
+$ultimo_id = $pdo->lastInsertId();
+
+if($id == ""){
+
+	//enviar whatsapp
+if($api_whatsapp != 'Não' and $telefone_sistema != ''){
+
+	$telefone_envio = '55'.preg_replace('/[ ()-]+/' , '' , $telefone_sistema);
+	$mensagem_whatsapp = '*'.$nome_sistema.'*%0A';
+	$mensagem_whatsapp .= '_Conta Vencendo Hoje_ %0A';
+	$mensagem_whatsapp .= '*Descrição:* '.$descricao.' %0A';
+	$mensagem_whatsapp .= '*Valor:* '.$valorF.' %0A';	
+	
+	$data_agd = $vencimento.' 08:00:00';
+	require('../../apis/agendar.php');
+
+	$pdo->query("UPDATE $tabela SET hash = '$hash' where id = '$ultimo_id'");
+	
+}
+
+}
 
 echo 'Salvo com Sucesso';
  ?>

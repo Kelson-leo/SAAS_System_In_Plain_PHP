@@ -2,6 +2,11 @@
 $tabela = 'grupo_acessos';
 require_once("../../../conexao.php");
 
+if($alterar_acessos != 'Sim'){
+	echo 'Você não tem permissão para alterar os acessos!';
+	exit();
+}
+
 $id = $_POST['id'];
 
 $query2 = $pdo->query("SELECT * from acessos where grupo = '$id' ");

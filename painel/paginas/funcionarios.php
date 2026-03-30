@@ -3,7 +3,7 @@ $pag = 'funcionarios';
 
 //verificar se ele tem a permissão de estar nessa página
 if(@$funcionarios == 'ocultar'){
-    echo "<script>window.location='../index.php'</script>";
+    echo "<script>window.location='index'</script>";
     exit();
 }
  ?>

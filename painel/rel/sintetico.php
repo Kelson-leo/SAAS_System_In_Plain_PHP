@@ -1,4 +1,7 @@
 <?php 
+@session_start();
+$mostrar_registros = @$_SESSION['registros'];
+$id_usuario = @$_SESSION['id'];
 include('../../conexao.php');
 include('data_formatada.php');
 
@@ -8,6 +11,9 @@ $dataFinal = $_GET['dataFinal'];
 $filtro_tipo = $_GET['filtro_tipo'];
 $filtro_lancamento = $_GET['filtro_lancamento'];
 $filtro_pendentes = $_GET['filtro_pendentes'];
+
+$mostrar_registros = $_GET['mostrar_registros'];
+$id_usuario = $_GET['id_usuario'];
 
 $dataInicialF = implode('/', array_reverse(@explode('-', $dataInicial)));
 $dataFinalF = implode('/', array_reverse(@explode('-', $dataFinal)));	
@@ -157,9 +163,17 @@ if($marca_dagua == 'Sim'){ ?>
 				<tbody>
 					<?php
 
+if($filtro_tabela == 'fornecedores'){
+	if($mostrar_registros == 'Não'){
+		$query9 = $pdo->query("SELECT * from $filtro_tabela where usuario = '$id_usuario' order by nome asc");
+	}else{
+		$query9 = $pdo->query("SELECT * from $filtro_tabela order by nome asc");
+	}	
+}else{
+	$query9 = $pdo->query("SELECT * from $filtro_tabela order by nome asc");
+}
 
 
-$query9 = $pdo->query("SELECT * from $filtro_tabela order by nome asc");
 $res9 = $query9->fetchAll(PDO::FETCH_ASSOC);
 $linhas9 = @count($res9);
 if($linhas9 > 0){
@@ -223,9 +237,9 @@ if($pago == 'Sim'){
 }
 
 $total_valor += $valor;
-$total_valorF = number_format($total_valor, 2, ',', '.');
-$total_pagasF = number_format($total_pagas, 2, ',', '.');
-$total_pendentesF = number_format($total_pendentes, 2, ',', '.');
+$total_valorF = @number_format($total_valor, 2, ',', '.');
+$total_pagasF = @number_format($total_pagas, 2, ',', '.');
+$total_pendentesF = @number_format($total_pendentes, 2, ',', '.');
 
 
 if($data_pgtoF == '00/00/0000'){

@@ -2,6 +2,11 @@
 $tabela = 'grupo_acessos';
 require_once("../../../conexao.php");
 
+if($alterar_acessos != 'Sim'){
+	echo 'Você não tem permissão para alterar os acessos!';
+	exit();
+}
+
 $nome = $_POST['nome'];
 $id = $_POST['id'];
 

@@ -35,6 +35,7 @@ for($i=0; $i<$linhas; $i++){
 	$endereco = $res[$i]['endereco'];
 	$ativo = $res[$i]['ativo'];
 	$data = $res[$i]['data'];
+	$mostrar_registros = $res[$i]['mostrar_registros'];
 
 	$dataF = implode('/', array_reverse(@explode('-', $data)));
 
@@ -71,7 +72,7 @@ echo <<<HTML
 <td style="color:{$classe_ativo}" class="esc">{$nivel}</td>
 <td style="color:{$classe_ativo}" class="esc"><img src="images/perfil/{$foto}" width="25px"></td>
 <td>
-	<big><a class="btn btn-info btn-sm" href="#" onclick="editar('{$id}','{$nome}','{$email}','{$telefone}','{$endereco}','{$nivel}')" title="Editar Dados"><i class="fa fa-edit "></i></a></big>
+	<big><a class="btn btn-info btn-sm" href="#" onclick="editar('{$id}','{$nome}','{$email}','{$telefone}','{$endereco}','{$nivel}','{$mostrar_registros}')" title="Editar Dados"><i class="fa fa-edit "></i></a></big>
 
 <div class="dropdown" style="display: inline-block;">                      
                         <a class="btn btn-danger btn-sm" href="#" aria-expanded="false" aria-haspopup="true" data-bs-toggle="dropdown" class="dropdown"><i class="fa fa-trash "></i> </a>
@@ -88,7 +89,7 @@ echo <<<HTML
 <big><a class="btn btn-success btn-sm" href="#" onclick="ativar('{$id}', '{$acao}')" title="{$titulo_link}"><i class="fa {$icone} "></i></a></big>
 
 
-<big><a class="btn btn-primary btn-sm" class="{$mostrar_adm}" href="#" onclick="permissoes('{$id}', '{$nome}')" title="Dar Permissões"><i class="fa fa-lock "></i></a></big>
+<big><a class="btn btn-primary btn-sm {$mostrar_adm}"  href="#" onclick="permissoes('{$id}', '{$nome}')" title="Dar Permissões"><i class="fa fa-lock "></i></a></big>
 
 </td>
 </tr>
@@ -123,7 +124,7 @@ HTML;
 </script>
 
 <script type="text/javascript">
-	function editar(id, nome, email, telefone, endereco, nivel){
+	function editar(id, nome, email, telefone, endereco, nivel, mostrar_registros){
 		$('#mensagem').text('');
     	$('#titulo_inserir').text('Editar Registro');
 
@@ -133,6 +134,7 @@ HTML;
     	$('#telefone').val(telefone);
     	$('#endereco').val(endereco);
     	$('#nivel').val(nivel).change();
+    	$('#mostrar_registros').val(mostrar_registros).change();
 
     	$('#modalForm').modal('show');
 	}

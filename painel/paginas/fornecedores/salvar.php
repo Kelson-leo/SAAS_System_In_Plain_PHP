@@ -1,9 +1,10 @@
 <?php 
+@session_start();
+$id_usuario = @$_SESSION['id'];
 $tabela = 'fornecedores';
 require_once("../../../conexao.php");
 
-@session_start();
-$id_usuario = @$_SESSION['id'];
+
 
 $nome = $_POST['nome'];
 $email = $_POST['email'];

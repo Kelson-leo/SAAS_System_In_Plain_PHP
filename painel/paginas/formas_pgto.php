@@ -2,8 +2,8 @@
 $pag = 'formas_pgto';
 
 //verificar se ele tem a permissão de estar nessa página
-if(@$pgto == 'ocultar'){
-    echo "<script>window.location='../index.php'</script>";
+if(@$formas_pgto == 'ocultar'){
+    echo "<script>window.location='index'</script>";
     exit();
 }
 

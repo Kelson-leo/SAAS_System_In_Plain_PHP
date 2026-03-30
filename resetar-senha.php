@@ -30,14 +30,14 @@ $_SESSION['temp_reset_token'] = $_REQUEST['token'];
   	 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
   	 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 
-  	 <link rel="stylesheet" type="text/css" href="css/style.css">
+  	 <link rel="stylesheet" type="text/css" href="assets/css/recuperar.css">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="shortcut icon" type="image/x-icon" href="img/icone.png">
 
 </head>
 <body>
-	<div class="login">		
+	<div class="login" >		
 		<div class="form">
 			<img src="img/logo.png" class="imagem">
 			 <br>

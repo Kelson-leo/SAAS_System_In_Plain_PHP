@@ -18,8 +18,8 @@ $obs = $res[0]['obs'];
 
 $dataF = implode('/', array_reverse(@explode('-', $data)));
 
-$subtotalF = number_format($subtotal, 2, ',', '.');
-$valorF = number_format($valor, 2, ',', '.');
+$subtotalF = @number_format($subtotal, 2, ',', '.');
+$valorF = @number_format($valor, 2, ',', '.');
 $multaF = @number_format($multa, 2, ',', '.');
 $jurosF = @number_format($juros, 2, ',', '.');
 $descontoF = @number_format($desconto, 2, ',', '.');
@@ -28,8 +28,8 @@ $taxaF = @number_format($taxa, 2, ',', '.');
 $query2 = $pdo->query("SELECT * FROM clientes where id = '$cliente'");
 $res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
 if(@count($res2) > 0){
-	$nome_cliente = $res2[0]['nome'];	
-	$tel_cliente = $res2[0]['telefone'];		
+	$nome_cliente = @$res2[0]['nome'];	
+	$tel_cliente = @$res2[0]['telefone'];		
 }
 
 

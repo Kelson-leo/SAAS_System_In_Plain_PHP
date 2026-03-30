@@ -1,6 +1,15 @@
 <?php 
+@session_start();
+$mostrar_registros = @$_SESSION['registros'];
+$id_usuario = @$_SESSION['id'];
 $tabela = 'pagar';
 require_once("../../../conexao.php");
+
+if($mostrar_registros == 'Não'){	
+	$sql_usuario_lanc = " and usuario_lanc = '$id_usuario '";
+}else{	
+	$sql_usuario_lanc = " ";
+}
 
 $data_hoje = date('Y-m-d');
 $data_atual = date('Y-m-d');
@@ -9,8 +18,8 @@ $ano_atual = Date('Y');
 $data_inicio_mes = $ano_atual."-".$mes_atual."-01";
 $data_inicio_ano = $ano_atual."-01-01";
 
-$data_ontem = date('Y-m-d', strtotime("-1 days",strtotime($data_atual)));
-$data_amanha = date('Y-m-d', strtotime("+1 days",strtotime($data_atual)));
+$data_ontem = date('Y-m-d', @strtotime("-1 days",@strtotime($data_atual)));
+$data_amanha = date('Y-m-d', @strtotime("+1 days",@strtotime($data_atual)));
 
 
 if($mes_atual == '04' || $mes_atual == '06' || $mes_atual == '07' || $mes_atual == '09'){
@@ -33,10 +42,14 @@ $total_pendentes = 0;
 $total_pagoF = 0;
 $total_pendentesF = 0;
 
-$dataInicial = @$_POST['p1'];
-$dataFinal = @$_POST['p2'];
-$pago = @$_POST['p3'];
+$dataInicial = @$_POST['p2'];
+$dataFinal = @$_POST['p3'];
+$filtro = @$_POST['p1'];
 $tipo_data = @$_POST['p4'];
+
+if($tipo_data == ""){
+	$tipo_data = 'vencimento';
+}
 
 if($dataInicial == ""){
 	$dataInicial = $data_inicio_mes;
@@ -46,15 +59,119 @@ if($dataFinal == ""){
 	$dataFinal = $data_final_mes;
 }
 
-if($tipo_data == ""){
-	$tipo_data = 'vencimento';
+
+$total_valor = 0;
+$total_valorF = 0;
+$total_total = 0;
+$total_totalF = 0;
+$total_vencidas = 0;
+$total_vencidasF = 0;
+$total_hoje = 0;
+$total_hojeF = 0;
+$total_amanha = 0;
+$total_amanhaF = 0;
+$total_recebidas = 0;
+$total_recebidasF = 0;
+
+
+
+//PEGAR O TOTAL DAS CONTAS A PAGAR PENDENTES
+$query = $pdo->query("SELECT * from $tabela where pago = 'Não' $sql_usuario_lanc");
+$res = $query->fetchAll(PDO::FETCH_ASSOC);
+$total_reg = @count($res);
+if($total_reg > 0){
+	for($i=0; $i < $total_reg; $i++){
+	foreach ($res[$i] as $key => $value){}
+		$total_valor += $res[$i]['valor'];
+		$total_valorF = @number_format($total_valor, 2, ',', '.');
+}}
+
+//PEGAR O TOTAL DAS CONTAS A PAGAR
+if($mostrar_registros == 'Não'){
+	
+	$query = $pdo->query("SELECT * from $tabela where usuario_lanc = '$id_usuario'");
+}else{
+	$query = $pdo->query("SELECT * from $tabela");
+}
+$res = $query->fetchAll(PDO::FETCH_ASSOC);
+$total_reg = @count($res);
+if($total_reg > 0){
+	for($i=0; $i < $total_reg; $i++){
+	foreach ($res[$i] as $key => $value){}
+		$total_total += $res[$i]['valor'];
+		$total_totalF = @number_format($total_total, 2, ',', '.');
+}}
+
+
+//PEGAR O TOTAL DAS CONTAS A PAGAR PEDENTES
+$query = $pdo->query("SELECT * from $tabela where vencimento < curDate() and pago = 'Não' $sql_usuario_lanc");
+$res = $query->fetchAll(PDO::FETCH_ASSOC);
+$total_reg = @count($res);
+if($total_reg > 0){
+	for($i=0; $i < $total_reg; $i++){
+	foreach ($res[$i] as $key => $value){}
+		$total_vencidas += $res[$i]['valor'];
+		$total_vencidasF = @number_format($total_vencidas, 2, ',', '.');
+}}
+
+//PEGAR O TOTAL DAS CONTAS A PAGAR QUE VENCE HOJE
+$query = $pdo->query("SELECT * from $tabela where vencimento = curDate() and pago = 'Não' $sql_usuario_lanc");
+$res = $query->fetchAll(PDO::FETCH_ASSOC);
+$total_am = @count($res);
+if($total_am > 0){
+	for($i=0; $i < $total_am; $i++){
+	foreach ($res[$i] as $key => $value){}
+		$total_hoje += $res[$i]['valor'];
+		$total_hojeF = @number_format($total_hoje, 2, ',', '.');
+}}
+
+
+//PEGAR O TOTAL DAS CONTAS A PAGAR RECEBIDAS
+$query = $pdo->query("SELECT * from $tabela where pago = 'Sim' $sql_usuario_lanc");
+$res = $query->fetchAll(PDO::FETCH_ASSOC);
+$total_pg = @count($res);
+if($total_pg > 0){
+	for($i=0; $i < $total_pg; $i++){
+	foreach ($res[$i] as $key => $value){}
+		$total_recebidas += $res[$i]['valor'];
+		$total_recebidasF = @number_format($total_recebidas, 2, ',', '.');
+}}
+
+
+$data_hoje = date('Y-m-d');
+$data_amanha = date('Y/m/d', @strtotime("+1 days",@strtotime($data_hoje)));
+
+
+//PEGAR O TOTAL DAS CONTAS A PAGAR QUE VENCE AMANHÃ
+$query = $pdo->query("SELECT * from $tabela where vencimento = '$data_amanha' and pago = 'Não' $sql_usuario_lanc");
+$res = $query->fetchAll(PDO::FETCH_ASSOC);
+$total_am = @count($res);
+if($total_am > 0){
+	for($i=0; $i < $total_am; $i++){
+	foreach ($res[$i] as $key => $value){}
+		$total_amanha += $res[$i]['valor'];
+		$total_amanhaF = @number_format($total_amanha, 2, ',', '.');
+}}
+
+
+if($filtro == 'Vencidas'){
+	$query = $pdo->query("SELECT * from $tabela where $tipo_data < curDate() and pago = 'Não' $sql_usuario_lanc order by id desc ");
+}else if($filtro == 'Recebidas'){
+	$query = $pdo->query("SELECT * from $tabela where pago = 'Sim' $sql_usuario_lanc order by id desc ");
+}else if($filtro == 'Hoje'){
+	$query = $pdo->query("SELECT * from $tabela where $tipo_data = curDate() and pago = 'Não' $sql_usuario_lanc order by id desc ");
+}else if($filtro == 'Amanha'){
+	$query = $pdo->query("SELECT * from $tabela where $tipo_data = '$data_amanha' and pago = 'Não' $sql_usuario_lanc order by id desc ");
+}else if($filtro == 'Todas'){
+	if($mostrar_registros == 'Não'){
+		$query = $pdo->query("SELECT * from $tabela where  usuario_lanc = '$id_usuario' order by id desc ");
+	}else{
+		$query = $pdo->query("SELECT * from $tabela order by id desc ");
+	}
+}else{
+	$query = $pdo->query("SELECT * from $tabela WHERE $tipo_data >= '$dataInicial' and vencimento <= '$dataFinal' $sql_usuario_lanc order by id desc ");
 }
 
-if($pago == 'Vencidas'){
-	$query = $pdo->query("SELECT * from $tabela where vencimento < curDate() and pago != 'Sim' order by id desc");
-}else{
-	$query = $pdo->query("SELECT * from $tabela where $tipo_data >= '$dataInicial' and $tipo_data <= '$dataFinal' and pago LIKE '%$pago%' order by id desc");
-}
 
 
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -197,12 +314,12 @@ if($pago == 'Sim'){
 $valor_multa = 0;
 $valor_juros = 0;
 $classe_venc = '';
-if(strtotime($vencimento) < strtotime($data_hoje)){
+if(@strtotime($vencimento) < @strtotime($data_hoje)){
 	$classe_venc = 'text-danger';
 	$valor_multa = $multa_atraso;
 
 	//pegar a quantidade de dias que o pagamento está atrasado
-	$dif = strtotime($data_hoje) - strtotime($vencimento);
+	$dif = @strtotime($data_hoje) - @strtotime($vencimento);
 	$dias_vencidos = floor($dif / (60*60*24));
 
 	$valor_juros = ($valor * $juros_atraso / 100) * $dias_vencidos;
@@ -369,6 +486,15 @@ HTML;
         "ordering": false,
 		"stateSave": true
     });
+
+
+
+    $('#total_itens').text('R$ <?=$total_valorF?>');
+	    $('#total_total').text('R$ <?=$total_totalF?>');
+	    $('#total_vencidas').text('R$ <?=$total_vencidasF?>');
+	    $('#total_hoje').text('R$ <?=$total_hojeF?>');
+	    $('#total_amanha').text('R$ <?=$total_amanhaF?>');
+	    $('#total_recebidas').text('R$ <?=$total_recebidasF?>');
 } );
 </script>
 

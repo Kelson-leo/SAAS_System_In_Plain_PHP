@@ -3,7 +3,7 @@ $pag = 'frequencias';
 
 //verificar se ele tem a permissão de estar nessa página
 if(@$frequencias == 'ocultar'){
-    echo "<script>window.location='../index.php'</script>";
+    echo "<script>window.location='index'</script>";
     exit();
 }
  ?>

@@ -1,18 +1,30 @@
 <?php 
 $pag = 'home';
 
+if($mostrar_registros == 'Não'){
+	$sql_usuario = " and usuario = '$id_usuario '";
+	$sql_usuario_lanc = " and usuario_lanc = '$id_usuario '";
+}else{
+	$sql_usuario = " ";
+	$sql_usuario_lanc = " ";
+}
+
 //total clientes
-$query = $pdo->query("SELECT * from clientes");
+if($mostrar_registros == 'Não'){
+	$query = $pdo->query("SELECT * from clientes where usuario = '$id_usuario'");
+}else{
+	$query = $pdo->query("SELECT * from clientes");
+}
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $total_clientes = @count($res);
 
 //total clientes mes
-$query = $pdo->query("SELECT * from clientes where data_cad >= '$data_inicio_mes' and data_cad <= '$data_final_mes'");
+$query = $pdo->query("SELECT * from clientes where data_cad >= '$data_inicio_mes' and data_cad <= '$data_final_mes' $sql_usuario");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $total_clientes_mes = @count($res);
 
 $total_pagar_vencidas = 0;
-$query = $pdo->query("SELECT * from pagar where vencimento < curDate() and pago != 'Sim'");
+$query = $pdo->query("SELECT * from pagar where vencimento < curDate() and pago != 'Sim' $sql_usuario_lanc");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $contas_pagar_vencidas = @count($res);
 for($i=0; $i<$contas_pagar_vencidas; $i++){
@@ -24,7 +36,7 @@ $total_pagar_vencidasF = @number_format($total_pagar_vencidas, 2, ',', '.');
 
 
 $total_receber_vencidas = 0;
-$query = $pdo->query("SELECT * from receber where vencimento < curDate() and pago != 'Sim'");
+$query = $pdo->query("SELECT * from receber where vencimento < curDate() and pago != 'Sim' $sql_usuario_lanc");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $contas_receber_vencidas = @count($res);
 for($i=0; $i<$contas_receber_vencidas; $i++){
@@ -36,7 +48,7 @@ $total_receber_vencidasF = @number_format($total_receber_vencidas, 2, ',', '.');
 
 //total recebidas mes
 $total_recebidas_mes = 0;
-$query = $pdo->query("SELECT * from receber where data_pgto >= '$data_inicio_mes' and data_pgto <= '$data_final_mes' and pago = 'Sim'");
+$query = $pdo->query("SELECT * from receber where data_pgto >= '$data_inicio_mes' and data_pgto <= '$data_final_mes' and pago = 'Sim' $sql_usuario_lanc");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $contas_recebidas_mes = @count($res);
 for($i=0; $i<$contas_recebidas_mes; $i++){
@@ -47,7 +59,7 @@ $total_recebidas_mesF = @number_format($total_recebidas_mes, 2, ',', '.');
 
 //total contas pagas mes
 $total_pagas_mes = 0;
-$query = $pdo->query("SELECT * from pagar where data_pgto >= '$data_inicio_mes' and data_pgto <= '$data_final_mes' and pago = 'Sim'");
+$query = $pdo->query("SELECT * from pagar where data_pgto >= '$data_inicio_mes' and data_pgto <= '$data_final_mes' and pago = 'Sim' $sql_usuario_lanc");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $contas_pagas_mes = @count($res);
 for($i=0; $i<$contas_pagas_mes; $i++){
@@ -72,7 +84,7 @@ if($total_saldo_mes >= 0){
 
 //total recebidas dia
 $total_recebidas_dia = 0;
-$query = $pdo->query("SELECT * from receber where data_pgto = curDate() and pago = 'Sim'");
+$query = $pdo->query("SELECT * from receber where data_pgto = curDate() and pago = 'Sim' $sql_usuario_lanc");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $contas_recebidas_dia = @count($res);
 for($i=0; $i<$contas_recebidas_dia; $i++){
@@ -83,7 +95,7 @@ $total_recebidas_diaF = @number_format($total_recebidas_dia, 2, ',', '.');
 
 //total contas pagas dia
 $total_pagas_dia = 0;
-$query = $pdo->query("SELECT * from pagar where data_pgto = curDate() and pago = 'Sim'");
+$query = $pdo->query("SELECT * from pagar where data_pgto = curDate() and pago = 'Sim' $sql_usuario_lanc");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $contas_pagas_dia = @count($res);
 for($i=0; $i<$contas_pagas_dia; $i++){
@@ -137,7 +149,7 @@ for ($i=1; $i <= 12; $i++) {
 
 	//total recebidas mes
 $total_recebidas_mes_grafico = 0;
-$query2 = $pdo->query("SELECT * from receber where data_pgto >= '$data_inicio_mes_grafico' and data_pgto <= '$data_final_mes_grafico' and pago = 'Sim'");
+$query2 = $pdo->query("SELECT * from receber where data_pgto >= '$data_inicio_mes_grafico' and data_pgto <= '$data_final_mes_grafico' and pago = 'Sim' $sql_usuario_lanc");
 $res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
 $contas_recebidas_mes_grafico = @count($res2);
 for($i2=0; $i2<$contas_recebidas_mes_grafico; $i2++){
@@ -148,7 +160,7 @@ for($i2=0; $i2<$contas_recebidas_mes_grafico; $i2++){
 
 //total contas pagas mes
 $total_pagas_mes_grafico = 0;
-$query2 = $pdo->query("SELECT * from pagar where data_pgto >= '$data_inicio_mes_grafico' and data_pgto <= '$data_final_mes_grafico' and pago = 'Sim'");
+$query2 = $pdo->query("SELECT * from pagar where data_pgto >= '$data_inicio_mes_grafico' and data_pgto <= '$data_final_mes_grafico' and pago = 'Sim' $sql_usuario_lanc");
 $res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
 $contas_pagas_mes_grafico = @count($res2);
 for($i2=0; $i2<$contas_pagas_mes_grafico; $i2++){
@@ -165,7 +177,7 @@ $total_meses_receber_grafico .= $total_recebidas_mes_grafico.'-';
 
 //verificar se ele tem a permissão de estar nessa página
 	if(@$home == 'ocultar'){
-		echo "<script>window.location='../index.php'</script>";
+		echo "<script>window.location='index'</script>";
 		exit();
 	}
 	?>
@@ -174,36 +186,44 @@ $total_meses_receber_grafico .= $total_recebidas_mes_grafico.'-';
 	<div class="mt-4 justify-content-between">
 
 
+	<?php if($ativo_sistema == ''){ ?>
 
+<div style="background: #ffc341; color:#3e3e3e; padding:10px; font-size:14px; margin-bottom:10px">
+
+<div><i class="fa fa-info-circle"></i> <b>Aviso: </b> Prezado Cliente, não identificamos o pagamento de sua última mensalidade, entre em contato conosco o mais rápido possivel para regularizar o pagamento, caso contário seu acesso ao sistema será desativado.</div>
+
+</div>
+
+<?php } ?>
 
 
 		
 
 						
 							<div class="row mb-2 m-2">
-								<div class="col-xl-3 col-lg-3 col-md-6 col-6" style="padding:5px">
-									<div style="padding:6px; background: #f5f5f5">
+								<div class="col-xl-3 col-lg-3 col-md-6 col-6" style="padding:5px; ">
+									<div style="padding:6px; background: #fafafa; box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.1);">
 									<p class="mb-1">Clientes Cadastrados</p>
 									<h5 class="mb-1"><?php echo $total_clientes ?></h5>
 									<p class="tx-11 text-muted">Este Mês<span class="text-success ms-2"><i class="fa fa-caret-up me-2"></i><span class="badge bg-success text-white tx-11"><?php echo $total_clientes_mes ?></span></span></p>
 									</div>
 								</div>
-								<div class="col-xl-3 col-lg-3 col-md-6 col-6" style="padding:5px">
-									<div style="padding:6px; background: #f5f5f5">
+								<div class="col-xl-3 col-lg-3 col-md-6 col-6" style="padding:5px;  ">
+									<div style="padding:6px; background: #fafafa; box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.1);">
 									<p class=" mb-1">Despesas Vencidas</p>
 									<h5 class="mb-1">R$ <?php echo $total_pagar_vencidasF ?></h5>
 									<p class="tx-11 text-muted">Pagar Vencidas<span class="text-danger ms-2"><i class="fa fa-caret-down me-2"></i><span class="badge bg-danger text-white tx-11"><?php echo $contas_pagar_vencidas ?></span></span></p>
 									</div>
 								</div>
 								<div class="col-xl-3 col-lg-3 col-md-6 col-6" style="padding:5px">
-									<div style="padding:6px; background: #f5f5f5">
+									<div style="padding:6px; background: #fafafa; box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.1);">
 									<p class=" mb-1">Receber Vencidas</p>
 									<h5 class="mb-1">R$ <?php echo $total_receber_vencidasF ?></h5>
 									<p class="tx-11 text-muted">Receber Vencidas<span class="text-success ms-2"><i class="fa fa-caret-up me-2"></i><span class="badge bg-success text-white tx-11"><?php echo $contas_receber_vencidas ?></span></span></p>
 									</div>
 								</div>
 								<div class="col-xl-3 col-lg-3 col-md-6 col-6" style="padding:5px">
-									<div style="padding:6px; background: #f5f5f5">
+									<div style="padding:6px; background: #fafafa; box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.1);">
 									<p class=" mb-1">Saldo no Mês</p>
 									<h5 class="mb-1 <?php echo $classe_saldo ?>">R$ <?php echo $total_saldo_mesF ?></h5>
 									<p class="tx-11 text-muted">Saldo Hoje<span class="text-success ms-2"><i class="fa fa-caret-up me-2"></i><span class="badge <?php echo $classe_saldo_dia ?> text-white tx-11">R$ <?php echo $total_saldo_diaF ?></span></span></p>
@@ -233,7 +253,7 @@ $total_meses_receber_grafico .= $total_recebidas_mes_grafico.'-';
 
 	<div class="row">
 		<div class="col-xl-6 col-lg-12 col-md-6 col-xs-12">
-			<div class="card sales-card">
+			<div class="card sales-card " style="box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.1);">
 				<div class="row">
 					<div class="col-8">
 						<div class="ps-4 pt-4 pe-3 pb-4">
@@ -259,7 +279,7 @@ $total_meses_receber_grafico .= $total_recebidas_mes_grafico.'-';
 			</div>
 		</div>
 		<div class="col-xl-6 col-lg-12 col-md-6 col-xs-12">
-			<div class="card sales-card">
+			<div class="card sales-card" style="box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.1);">
 				<div class="row">
 					<div class="col-8">
 						<div class="ps-4 pt-4 pe-3 pb-4">
@@ -285,7 +305,7 @@ $total_meses_receber_grafico .= $total_recebidas_mes_grafico.'-';
 			</div>
 		</div>
 		<div class="col-xl-6 col-lg-12 col-md-6 col-xs-12">
-			<div class="card sales-card">
+			<div class="card sales-card" style="box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.1);">
 				<div class="row">
 					<div class="col-8">
 						<div class="ps-4 pt-4 pe-3 pb-4">
@@ -311,7 +331,7 @@ $total_meses_receber_grafico .= $total_recebidas_mes_grafico.'-';
 			</div>
 		</div>
 		<div class="col-xl-6 col-lg-12 col-md-6 col-xs-12">
-			<div class="card sales-card">
+			<div class="card sales-card" style="box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.1);">
 				<div class="row">
 					<div class="col-8">
 						<div class="ps-4 pt-4 pe-3 pb-4">
@@ -343,7 +363,7 @@ $total_meses_receber_grafico .= $total_recebidas_mes_grafico.'-';
 
 
 	<div class="row row-sm">
-		<div class="col-sm-12 col-lg-12 col-xl-6 col-xxl-3">
+		<div class="col-sm-12 col-lg-12 col-xl-6 col-xxl-12">
 			<div class="card">
 				<div class="card-header pb-3">
 					<h3 class="card-title mb-2">SALES ACTIVITY</h3>
@@ -421,7 +441,7 @@ $total_meses_receber_grafico .= $total_recebidas_mes_grafico.'-';
 
 
 
-		<div class="col-xl-6 col-xxl-3 col-md-12 col-lg-12">
+		<div class="col-xl-6 col-xxl-12 col-md-12 col-lg-12">
 			<div class="card">
 				<div class="card-header pb-0">
 					<h3 class="card-title mb-2">Weekly Visitors</h3>

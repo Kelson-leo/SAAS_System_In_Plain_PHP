@@ -11,7 +11,7 @@ if($url[1] == 'localhost/'){
 
 //dados conexão bd local
 $servidor = 'localhost';
-$banco = 'projeto_rel';
+$banco = 'projeto';
 $usuario = 'root';
 $senha = '';
 
@@ -32,7 +32,7 @@ $query = $pdo->query("SELECT * from config");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $linhas = @count($res);
 if($linhas == 0){
-	$pdo->query("INSERT INTO config SET nome = '$nome_sistema', email = '$email_sistema', telefone = '$telefone_sistema', logo = 'logo.png', logo_rel = 'logo.jpg', icone = 'icone.png', ativo = 'Sim', multa_atraso = '0', juros_atraso = '0', marca_dagua = 'Sim', assinatura_recibo = 'Não', impressao_automatica = 'Não'");
+	$pdo->query("INSERT INTO config SET nome = '$nome_sistema', email = '$email_sistema', telefone = '$telefone_sistema', logo = 'logo.png', logo_rel = 'logo.jpg', icone = 'icone.png', ativo = 'Sim', multa_atraso = '0', juros_atraso = '0', marca_dagua = 'Sim', assinatura_recibo = 'Não', impressao_automatica = 'Não', api_whatsapp = 'Não', alterar_acessos = 'Não'");
 }else{
 $nome_sistema = $res[0]['nome'];
 $email_sistema = $res[0]['email'];
@@ -52,6 +52,10 @@ $cnpj_sistema = $res[0]['cnpj'];
 $entrar_automatico = $res[0]['entrar_automatico'];
 $mostrar_preloader = $res[0]['mostrar_preloader'];
 $ocultar_mobile = $res[0]['ocultar_mobile'];
+$api_whatsapp = $res[0]['api_whatsapp'];
+$token_whatsapp = $res[0]['token_whatsapp'];
+$instancia_whatsapp = $res[0]['instancia_whatsapp'];
+$alterar_acessos = $res[0]['alterar_acessos'];
 
 $tel_whats = '55'.preg_replace('/[ ()-]+/' , '' , $telefone_sistema);
 
@@ -65,7 +69,7 @@ if($ativo_sistema != 'Sim' and $ativo_sistema != ''){ ?>
 }
 	</style>
 	<div style="text-align: center; margin-top: 100px">
-	<img src="img/bloqueio.png" class="imgsistema_mobile">	
+	<img src="<?php echo $url_sistema ?>img/bloqueio.png" class="imgsistema_mobile">	
 	</div>
 <?php 
 exit();

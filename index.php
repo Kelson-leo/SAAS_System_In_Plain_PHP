@@ -6,9 +6,9 @@ $query = $pdo->query("SELECT * from usuarios");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $linhas = @count($res);
 $senha = '123';
-$senha_crip = sha1($senha);
+$senha_crip = password_hash($senha, PASSWORD_DEFAULT);
 if($linhas == 0){
-	$pdo->query("INSERT INTO usuarios SET nome = '$nome_sistema', email = '$email_sistema', senha = '', senha_crip = '$senha_crip', nivel = 'Administrador', ativo = 'Sim', foto = 'sem-foto.jpg', telefone = '$telefone_sistema', data = curDate() ");
+	$pdo->query("INSERT INTO usuarios SET nome = '$nome_sistema', email = '$email_sistema', senha = '', senha_crip = '$senha_crip', nivel = 'Administrador', ativo = 'Sim', foto = 'sem-foto.jpg', telefone = '$telefone_sistema', data = curDate(), mostrar_registros = 'Sim' ");
 }
 
  ?>
@@ -187,6 +187,7 @@ if($linhas == 0){
 
 <form action="autenticar.php" method="post" style="display:none">
 	<input type="text" name="id" id="id_usua">
+	<input type="text" name="pagina" id="pagina_salva">
 	<button type="submit" id="btn_auto"></button>
 </form>
 
@@ -207,11 +208,14 @@ if($linhas == 0){
 		var email_usuario = localStorage.email_usu;
 		var senha_usuario = localStorage.senha_usu;
 		var id_usuario = localStorage.id_usu;
+		var pagina = localStorage.pagina;
+
 		var redirecionar = "<?=$entrar_automatico?>";
 
 		if(id_usuario != "" && id_usuario != undefined && redirecionar == 'Sim'){
 			$('#pagina').hide();
 			$('#id_usua').val(id_usuario);
+			$('#pagina_salva').val(pagina);
 			$('#btn_auto').click();
 		}else{
 			$('#pagina').show();

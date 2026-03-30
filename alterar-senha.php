@@ -14,7 +14,7 @@ if($senha != $re_senha){
      exit();
 }
 
-        $senha = sha1($senha);
+        $senha = password_hash($senha, PASSWORD_DEFAULT);
 
           $query = $pdo->prepare("UPDATE usuarios SET senha_crip = :senha, token = :token WHERE email = '$email'");
 

@@ -2,7 +2,7 @@
 $pag = 'grupo_acessos';
 
 if(@$grupo_acessos == 'ocultar'){
-	echo "<script>window.location='../index.php'</script>";
+	echo "<script>window.location='index'</script>";
     exit();
 }
 

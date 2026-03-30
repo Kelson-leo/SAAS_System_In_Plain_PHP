@@ -33,7 +33,7 @@ for($i=0; $i < @count($res); $i++){
 
 		$data = implode('/', array_reverse(@explode('-', $data)));
 
-		$valor = number_format($valor, 2, ',', '.');
+		$valor = @number_format($valor, 2, ',', '.');
 
 	
 

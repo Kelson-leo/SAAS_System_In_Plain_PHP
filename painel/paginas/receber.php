@@ -2,7 +2,7 @@
 $pag = 'receber';
 
 if(@$receber == 'ocultar'){
-	echo "<script>window.location='../index.php'</script>";
+	echo "<script>window.location='index'</script>";
 	exit();
 }
 
@@ -46,36 +46,98 @@ if(@$receber == 'ocultar'){
 
 			<input type="date" name="dataFinal" id="dataFinal" style="height:35px; width:49%; font-size: 13px" value="<?php echo $data_final_mes ?>" onchange="buscar()">	
 		</div>	
-
-
-
-		<div style="display: inline-block;">
-			<select class="form-select" name="pago" id="pago" style="height: 35px;"  onchange="buscar()">
-				<option value="">Todas</option>
-				<option value="Sim">Pagas</option>
-				<option value="Não">Pendentes</option>
-				<option value="Vencidas">Vencidas</option>
-			</select>
-		</div>
-
-
-		<div  style="display: inline-block;">
-			<span class="ocultar_mobile" style="font-size: 14px; border:1px solid #6092a8; padding:5px; ">
-				<a href="#" onclick="trocarData('mes')">Mês</a> / 
-				<a href="#" onclick="trocarData('hoje')">Hoje</a> / 
-				<a href="#" onclick="trocarData('ontem')">Ontem</a> /
-				<a href="#" onclick="trocarData('amanha')">Amanhã</a> 
-			</span>
-		</div>
-
-
 		
 
 
 		</div>	
 
-		<input type="hidden" name="tipo_data" id="tipo_data">
 
+		<div class="card-group" style="margin-bottom: -30px">
+	
+	<div class="card text-center mb-5" style="width: 100%; margin-right: 10px; border-radius: 10px; height:110px">
+		<a class="text-white" href="#" onclick="$('#tipo_data_filtro').val('Vencidas'); $('#pago').val('Vencidas'); buscar(); ">
+			<div class="card-header bg-red border-light">
+	             Vencidas
+	            <i class="fa fa-external-link pull-right"></i>
+	        </div>
+	        <div class="card-body">
+	        	<p class="card-text" style="margin-top:-15px;">
+	        		<h4><span class="text-danger" id="total_vencidas">R$ 0,0</span></h4>
+	        	</p>
+	        </div>
+        </a>
+    </div>
+    
+
+
+    <div class="card text-center mb-5" style="width: 100%; margin-right: 10px; border-radius: 10px; height:110px">
+    	<a href="#" onclick="$('#tipo_data_filtro').val('Hoje'); $('#pago').val(''); buscar(); ">
+			<div class="card-header bg-orange border-light text-white">
+	            Vence Hoje
+	            <i class="fa fa-external-link pull-right"></i>
+	        </div>
+	        <div class="card-body">
+	        	<p class="card-text" style="margin-top:-15px;">
+	        		<h4><span style="color: #f05800" id="total_hoje">R$ 0,0</span></h4>
+	        	</p>
+	        </div>
+        </a>
+    </div>
+
+
+    <div class="card text-center mb-5" style="width: 100%; margin-right: 10px; border-radius: 10px; height:110px">
+    	<a href="#" onclick="$('#tipo_data_filtro').val('Amanha'); $('#pago').val(''); buscar(); ">
+			<div class="card-header border-light text-white" style="background: gray">
+	            Vence Amanhã
+	            <i class="fa fa-external-link pull-right"></i>
+	        </div>
+	        <div class="card-body">
+	        	<p class="card-text" style="margin-top:-15px;">
+	        		<h4><span style="color: gray" id="total_amanha">R$ 0,0</span></h4>
+	        	</p>
+	        </div>
+        </a>
+    </div>
+
+    
+
+
+     <div class="card text-center mb-5" style="width: 100%; margin-right: 10px; border-radius: 10px; height:110px">
+    	<a href="#" onclick=" $('#tipo_data_filtro').val('Recebidas'); $('#pago').val('Sim'); buscar();">
+			<div class="card-header border-light text-white" style="background: #2b7a00">
+	            Recebidas
+	            <i class="fa fa-external-link pull-right"></i>
+	        </div>
+	        <div class="card-body">
+	        	<p class="card-text" style="margin-top:-15px;">
+	        		<h4><span style="color: #2b7a00" id="total_recebidas">R$ 0,0</span></h4>
+	        	</p>
+	        </div>
+        </a>
+    </div>
+
+
+      <div class="card text-center mb-5" style="width: 100%; margin-right: 10px; border-radius: 10px; height:110px">
+    	<a href="#" onclick="$('#tipo_data_filtro').val('Todas'); $('#pago').val(''); buscar();">
+			<div class="card-header border-light text-white" style="background: #1f1f1f;">
+	            Total
+	            <i class="fa fa-external-link pull-right"></i>
+	        </div>
+	        <div class="card-body">
+	        	<p class="card-text" style="margin-top:-15px;">
+	        		<h4><span style="color: #1f1f1f" class="verde" id="total_total">R$ 0,0</span></h4>
+	        	</p>
+	        </div>
+        </a>
+    </div>
+
+
+</div>
+
+		
+		<input type="hidden" name="tipo_data" id="tipo_data">
+		<input type="hidden" name="pago" id="pago">
+		<input type="hidden" name="tipo_data_filtro" id="tipo_data_filtro">
 		
 		</form>
 		
@@ -124,7 +186,11 @@ if(@$receber == 'ocultar'){
 								<select name="cliente" id="cliente" class="sel2" style="width:100%; height:35px; ">
 								<option value="0">Selecione um Cliente</option>
 								<?php 
-								$query = $pdo->query("SELECT * from clientes order by id asc");
+								if($mostrar_registros == 'Não'){
+									$query = $pdo->query("SELECT * from clientes where usuario = '$id_usuario' order by id asc");
+								}else{
+									$query = $pdo->query("SELECT * from clientes order by id asc");
+								}
 								$res = $query->fetchAll(PDO::FETCH_ASSOC);
 								$linhas = @count($res);
 								if($linhas > 0){
@@ -655,6 +721,7 @@ if(@$receber == 'ocultar'){
 			$('.sel2').select2({
 				dropdownParent: $('#modalForm')
 			});
+			
 		});
 	</script>
 
@@ -755,54 +822,21 @@ if(@$receber == 'ocultar'){
 
 	<script type="text/javascript">
 		function buscar(){
-			dataInicial = $('#dataInicial').val();
-			dataFinal = $('#dataFinal').val();
-			pago = $('#pago').val();
-			tipo_data = $('#tipo_data').val();
-
-			listar(dataInicial, dataFinal, pago, tipo_data);
+			var filtro = $('#tipo_data_filtro').val();
+			var dataInicial = $('#dataInicial').val();
+			var dataFinal = $('#dataFinal').val();
+			var tipo_data = $('#tipo_data').val();
+			listar(filtro, dataInicial, dataFinal, tipo_data)
 
 		}
 
-		function trocarData(tipo){
-
-			data_inicio_mes = "<?=$data_inicio_mes?>";
-			data_final_mes = "<?=$data_final_mes?>";
-			data_atual = "<?=$data_atual?>";
-			data_ontem = "<?=$data_ontem?>";
-			data_amanha = "<?=$data_amanha?>";		
-
-			if(tipo == 'mes'){
-				$('#dataInicial').val(data_inicio_mes);
-				$('#dataFinal').val(data_final_mes);
-			}
-
-			if(tipo == 'hoje'){
-				$('#dataInicial').val(data_atual);
-				$('#dataFinal').val(data_atual);
-			}
-
-			if(tipo == 'amanha'){			
-				$('#dataInicial').val(data_amanha);
-				$('#dataFinal').val(data_amanha);
-			}
-
-			if(tipo == 'ontem'){
-				$('#dataInicial').val(data_ontem);
-				$('#dataFinal').val(data_ontem);
-			}
-
-			buscar();
-		}
 
 		function tipoData(tipo){
 			$('#tipo_data').val(tipo);
 			buscar();
 		}
 
-
-
-
+		
 		function totalizar(){
 			valor = $('#valor-baixar').val();
 			desconto = $('#valor-desconto').val();

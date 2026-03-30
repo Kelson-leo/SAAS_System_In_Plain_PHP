@@ -1,5 +1,6 @@
 <?php 
 require_once("../../conexao.php");
+require_once("../funcoes/extenso.php");
 $id = $_GET['id'];
 
 $query = $pdo->query("SELECT * from receber where id = '$id' ");
@@ -22,6 +23,13 @@ if(@count($res2) > 0){
 
 $valorF = @number_format($valor, 2, ',', '.');
 $data_pgtoF = implode('/', array_reverse(@explode('-', $data_pgto)));
+$valor_extenso = explode(".", $valor);
+$valor_extenso1 = $valor_extenso[0].' reais';
+if($valor_extenso[1] > 0){
+  $valor_extenso2 = ' e '.$valor_extenso[1].' centavos';
+}else{
+  $valor_extenso2 = '';
+}
 }
 
 ?>
@@ -148,7 +156,7 @@ $data_pgtoF = implode('/', array_reverse(@explode('-', $data_pgto)));
   
   <div class="receipt-section">
     <span><big>
-      Recebi(emos) de <b><?php echo $nome_pessoa ?></b> a quantia de R$ <b><?php echo $valorF ?> </b> reais na data <b><?php echo $data_pgtoF ?></b> correspondente a(ao) <?php echo $descricao ?>. 
+      Recebi(emos) de <b><?php echo $nome_pessoa ?></b> a quantia de R$ <b><?php echo $valorF ?> </b> (<?php echo valor_por_extenso($valor_extenso1)?> <?php echo $valor_extenso2 ?>) na data <b><?php echo $data_pgtoF ?></b> correspondente a(ao) <?php echo $descricao ?>. 
     
   </big></span>
         

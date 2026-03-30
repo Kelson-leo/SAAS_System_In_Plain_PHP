@@ -1,4 +1,7 @@
 <?php
+@session_start();
+$mostrar_registros = @$_SESSION['registros'];
+$id_usuario = @$_SESSION['id'];
 require_once("../../conexao.php");
 
 $dadosXls = "";
@@ -15,7 +18,11 @@ $dadosXls .= " <th>Data Nascimento</th>";
 $dadosXls .= " </tr>";
 
 
-$query = $pdo->query("SELECT * from clientes order by id desc");
+if($mostrar_registros == 'Não'){
+	$query = $pdo->query("SELECT * from clientes where usuario = '$id_usuario' order by id desc");
+}else{
+	$query = $pdo->query("SELECT * from clientes order by id desc");
+}
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $linhas = @count($res);
 if($linhas > 0){
